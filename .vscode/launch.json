@@ -1,0 +1,70 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug (Launch) - Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Bank<CPSC304-JavaDemo>",
+            "request": "launch",
+            "mainClass": "ca.ubc.cs304.controller.Bank",
+            "projectName": "CPSC304-JavaDemo"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-OracleDriver<CPSC304-JavaDemo>",
+            "request": "launch",
+            "mainClass": "oracle.jdbc.OracleDriver",
+            "projectName": "CPSC304-JavaDemo"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-JavaToJavaConverter<CPSC304-JavaDemo>",
+            "request": "launch",
+            "mainClass": "oracle.jdbc.driver.JavaToJavaConverter",
+            "projectName": "CPSC304-JavaDemo"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-OracleParameterMetaDataParser<CPSC304-JavaDemo>",
+            "request": "launch",
+            "mainClass": "oracle.jdbc.driver.OracleParameterMetaDataParser",
+            "projectName": "CPSC304-JavaDemo"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-OracleSql<CPSC304-JavaDemo>",
+            "request": "launch",
+            "mainClass": "oracle.jdbc.driver.OracleSql",
+            "projectName": "CPSC304-JavaDemo"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-SQLStateMapping<CPSC304-JavaDemo>",
+            "request": "launch",
+            "mainClass": "oracle.jdbc.driver.SQLStateMapping",
+            "projectName": "CPSC304-JavaDemo"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-ProxyExport<CPSC304-JavaDemo>",
+            "request": "launch",
+            "mainClass": "oracle.jdbc.proxy.ProxyExport",
+            "projectName": "CPSC304-JavaDemo"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-CharacterSetFactory<CPSC304-JavaDemo>",
+            "request": "launch",
+            "mainClass": "oracle.sql.CharacterSetFactory",
+            "projectName": "CPSC304-JavaDemo"
+        }
+    ]
+}
