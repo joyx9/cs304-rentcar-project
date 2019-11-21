@@ -77,6 +77,10 @@ create table returns
 	foreign key (rid) references rentals ON DELETE CASCADE,
 	check (fulltank = 'y' or fulltank ='n'));
 
+create sequence reserveConfNo 
+start with 1
+increment by 1;
+
 -- Insert customer, item and purchase data
 
 insert into customer 
