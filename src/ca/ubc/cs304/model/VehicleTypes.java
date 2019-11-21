@@ -9,7 +9,7 @@ package ca.ubc.cs304.model;
  *
  */
 public class VehicleTypes {
-    private final String vlicense;  // vtname -> vlicense instead??
+    private final String vtname;  // vtname -> vlicense instead??
     private final String features;
     private final int wrate;
     private final int drate;
@@ -20,9 +20,9 @@ public class VehicleTypes {
     private final int kirate;
 
 
-    public VehicleTypes(String vlicense, String features, int wrate, int drate, int hrate, int wirate,
+    public VehicleTypes(String vtname, String features, int wrate, int drate, int hrate, int wirate,
                         int dirate, int hirate, int kirate) {
-        this.vlicense = vlicense;
+        this.vtname = vtname;
         this.features = features;
         this.wrate = wrate;
         this.drate = drate;
@@ -33,8 +33,8 @@ public class VehicleTypes {
         this.kirate = kirate;
     }
 
-    public String getVlicense() {
-        return vlicense;
+    public String getVtname() {
+        return vtname;
     }
 
     public String getFeatures() {

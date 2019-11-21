@@ -10,7 +10,6 @@ package ca.ubc.cs304.model;
  * and the status indicates: rented|in shop for maintenance|available
  */
 public class Vehicles {
-    private final int vid; // do we still need this attribute ?
     private final String vlicense;
     private final String make;
     private final String model;
@@ -23,9 +22,9 @@ public class Vehicles {
     private final String city;
 
 
-    public Vehicles(int vid, String vlicense, String make, String model, int year, String color,
+    public Vehicles(String vlicense, String make, String model, int year, String color,
                     int odometer, String status, String vtname, String location, String city) {
-        this.vid = vid;
+
         this.vlicense = vlicense;
         this.make = make;
         this.model = model;
@@ -38,9 +37,7 @@ public class Vehicles {
         this.city = city;
     }
 
-    public Integer getVid() {
-        return vid;
-    }
+
 
     public String getVlicense() {
         return vlicense;
