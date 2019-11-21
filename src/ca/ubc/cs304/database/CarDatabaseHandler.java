@@ -85,6 +85,27 @@ public class CarDatabaseHandler {
         return result.toArray(new Vehicles[result.size()]);
     }
 
+    /**
+     * Generate Daily Rental Report
+     * TODO!!!!!
+     */
+    public ResultSet getDailyRentals() {
+        ResultSet rs;
+
+        try {
+            Statement stmt = connection.createStatement();
+            rs = stmt.executeQuery("stub");
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return rs; //TODO need to save it locally
+    }
+
+
+
 
 
 
