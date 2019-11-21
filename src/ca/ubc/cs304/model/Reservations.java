@@ -19,11 +19,12 @@ public class Reservations {
     private final Time fromTime;
     private final Date toDate;
     private final Time toTime;
+    private final String vtname;
 
 
 
     public Reservations(int confNo, String vlicense, String dlicense, Date fromDate, Time fromTime,
-                        Date toDate, Time toTime) {
+                        Date toDate, Time toTime, String vtname) {
         this.confNo = confNo;
         this.vlicense = vlicense;
         this.dlicense = dlicense;
@@ -31,6 +32,7 @@ public class Reservations {
         this.fromTime = fromTime;
         this.toDate = toDate;
         this.toTime = toTime;
+        this.vtname = vtname;
     }
 
     public Integer getconfNo() {
@@ -59,6 +61,10 @@ public class Reservations {
 
     public Time getToTime() {
         return toTime;
+    }
+
+    public String getVtname() {
+        return vtname;
     }
 
 }
