@@ -178,7 +178,6 @@ public class CarDatabaseHandler {
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
-
         return rs; //TODO need to save it locally
     }
 

@@ -10,9 +10,7 @@ public class MainDisplay extends JFrame implements ActionListener {
     private static String[] multStrings= {"view vehicles", "make reservation", "rent vehicle",
                                             "return vehicle", "generate report"};
     private static Font defaultFont = new Font("Courier New", Font.PLAIN, 25);
-    private static String initScoreText = "CURRENT SCORE: 0";
     private static Pattern p = Pattern.compile("^[ a-zA-Z]*$");
-    private static String tfInitial = "";
     final static int width = 1000;
     final static int height = 800;
     private JFrame frame;
@@ -22,13 +20,16 @@ public class MainDisplay extends JFrame implements ActionListener {
     private JComboBox multSelect;
 
 
-    MainDisplay(){
+    public MainDisplay(){
         frame = new JFrame();
         frame.setSize(width, height);
         frame.setTitle("Rent-A-Car");
         setupDisplay(frame.getContentPane());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
+    }
+
+    public void showDisplay() {
         frame.setVisible(true);
     }
 
@@ -61,16 +62,6 @@ public class MainDisplay extends JFrame implements ActionListener {
         gbc.gridx = 0;
         gbc.gridy = 2;
         pane.add(button, gbc);
-
-        // todo i might add label later to display that the transaction was a success
-//        scoreLabel = new JLabel();
-//        scoreLabel.setText(initScoreText);
-//        scoreLabel.setFont(defaultFont);
-//        gbc.fill = GridBagConstraints.HORIZONTAL;
-//        gbc.gridx = 0;
-//        gbc.gridy = 4;
-//        panel.add(scoreLabel, gbc);
-
     }
 
     public void returnFromDisplay(){
@@ -85,11 +76,11 @@ public class MainDisplay extends JFrame implements ActionListener {
             if (multString == "view vehicles"){
                 new ViewVehiclesDisplay (this);
             } else if (multString == "make reservation") {
-               // new ReservationDisplay (this);
+               new ReserveCarDisplay (this);
             } else if (multString == "rent vehicle") {
-               // new RentVehicleDisply (this);
+               new RentCarDisplay (this);
             } else if (multString == "return vehicle") {
-               // new ReturnVehicleDisplay (this);
+                new ReturnCarDisplay (this);
             } else if (multString == "generate report"){
               //  new GenerateReportDisplay (this);
             }
