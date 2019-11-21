@@ -1,5 +1,6 @@
 package ca.ubc.cs304.database;
 
+import ca.ubc.cs304.model.RentReceipt;
 import ca.ubc.cs304.model.Vehicles;
 
 import java.sql.*;
@@ -31,6 +32,7 @@ public class CarDatabaseHandler {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
     }
+
 
     /**
      * View all the vehicles
@@ -86,11 +88,87 @@ public class CarDatabaseHandler {
     }
 
     /**
+     * Reserving && Renting && Returning ================================================
+     ***
+     ***
+     ***
+     ***
+     * Making a Reservation
+     * Inputs:
+     */
+    public Integer makeReservation(String vtname, String dlicense, Date fromDate, Time fromTime,
+           Date toDate, Time toTime){
+        Integer result = -1;
+
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO reservations VALUES (confNo_counter.nextval,?,?,?,?,?,?)");
+            // ps.setInt(1, 1); // TODO change this confNo create a counter in the database
+            ps.setString(2, vtname);
+            ps.setString(3, dlicense);
+            ps.setDate(4, fromDate);
+            ps.setTime(5, fromTime);
+            ps.setDate(6, toDate);
+            ps.setTime(7, toTime);
+
+            ps.executeUpdate();
+            connection.commit();
+
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT confNo FROM reservations WHERE confNo = confNo_counter.currval");
+            result = rs.getInt("confNo");
+
+            ps.close();
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+
+        return result;
+
+    }
+
+
+    /**
+     * Renting a vehicle
+     * If reservation no made -> insert into reservation, customer provides confNo & dlicense
+     * find the rest from reservation
+     * to complete : CardNo + ExpDate
+     * return a receipt displaying: confNo, date of reservation, vtname, location, rental lasts for etc.
+     */
+    public RentReceipt rentVehicle(String vtname, String location) {
+        RentReceipt result;
+        ResultSet rs = null;
+
+        try {
+            Statement stmt = connection.createStatement();
+            if (vtname == null && location == null) {
+                rs = stmt.executeQuery("SELECT * FROM vehicle ORDER BY "); //>> no input from customer
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        // stub
+        return null;
+    }
+
+
+    /**
+     * Generate Reports ================================================
+     */
+
+    /**
      * Generate Daily Rental Report
      * TODO!!!!!
+     * TODO: need to construct another class to store report info ???
      */
     public ResultSet getDailyRentals() {
-        ResultSet rs;
+        ResultSet rs = null;
 
         try {
             Statement stmt = connection.createStatement();
@@ -104,6 +182,15 @@ public class CarDatabaseHandler {
         return rs; //TODO need to save it locally
     }
 
+
+    // not sure what it does here just put it first
+    private void rollbackConnection() {
+        try  {
+            connection.rollback();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+    }
 
 
 
