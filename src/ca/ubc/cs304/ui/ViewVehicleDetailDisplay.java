@@ -12,10 +12,9 @@ public class ViewVehicleDetailDisplay extends JFrame implements ActionListener {
     private static int height = 800;
     private JFrame frame;
     private GridBagConstraints gbc;
-    private JLabel label;
-    private JButton button;
     private JTextArea vehicleText;
     private MainDisplay mainDisplay;
+    private JButton button;
 
     ViewVehicleDetailDisplay(MainDisplay md){
         frame = new JFrame();
@@ -35,7 +34,7 @@ public class ViewVehicleDetailDisplay extends JFrame implements ActionListener {
         vehicleText = new JTextArea();
         vehicleText.setText("Here is a list of all vehicles:");
         vehicleText.setFont(defaultFont);
-        vehicleText.setColumns(2);
+        vehicleText.setColumns(100);
         vehicleText.setLineWrap(true);
         vehicleText.setWrapStyleWord(true);
         vehicleText.setEditable(false);
@@ -46,16 +45,28 @@ public class ViewVehicleDetailDisplay extends JFrame implements ActionListener {
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ");
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 0;
+        gbc.ipadx = 40;
+        gbc.ipady = 100;
         pane.add(vehicleText, gbc);
+
+        // adds "back to main" button
+        button = new JButton("back to main");
+        button.setFont(defaultFont);
+        button.addActionListener(this);
+        button.setActionCommand("backPressed");
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        pane.add(button, gbc);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getActionCommand()== "showPressed"){
-            //todo finish this
+        if(e.getActionCommand()== "backPressed"){
+            mainDisplay.returnFromDisplay();
+            frame.setVisible(false);
         }
     }
 
 }
-

@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.regex.Pattern;
 
+import static java.awt.GridBagConstraints.RELATIVE;
+
 public class ViewVehiclesDisplay extends JFrame implements ActionListener {
     private static Font defaultFont = new Font("Courier New", Font.PLAIN, 25);
     private static int width = 1000;
@@ -147,7 +149,7 @@ public class ViewVehiclesDisplay extends JFrame implements ActionListener {
         button.setActionCommand("detailsPressed");
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
-        gbc.gridy = 10;
+        gbc.gridy = RELATIVE;
         frame.getContentPane().add(button, gbc);
         frame.revalidate();
         frame.repaint();
@@ -161,7 +163,8 @@ public class ViewVehiclesDisplay extends JFrame implements ActionListener {
             mainDisplay.returnFromDisplay();
             frame.setVisible(false);
         } else if (e.getActionCommand() == "detailsPressed"){
-
+            new ViewVehicleDetailDisplay(mainDisplay);
+            frame.setVisible(false);
         }
     }
 }

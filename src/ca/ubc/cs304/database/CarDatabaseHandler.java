@@ -90,7 +90,7 @@ public class CarDatabaseHandler {
      * TODO!!!!!
      */
     public ResultSet getDailyRentals() {
-        ResultSet rs;
+        ResultSet rs = null;
 
         try {
             Statement stmt = connection.createStatement();
@@ -100,7 +100,6 @@ public class CarDatabaseHandler {
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
-
         return rs; //TODO need to save it locally
     }
 
