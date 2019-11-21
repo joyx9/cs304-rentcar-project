@@ -38,13 +38,30 @@ public class CarDatabaseHandler {
      * Customers are able to choose: vtname, location, timeInterval[*PIAZZA*]
      *           if not inputs view all
      */
-    public Vehicles[] getAllVehicles() {
+    public Vehicles[] getAllVehicles(String vtname, String location) {
         ArrayList<Vehicles> result = new ArrayList<Vehicles>();
+        ResultSet rs;
 
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM vehicle");
-            // TODO: executeQuery should be what the user input
+            if (vtname == null && location == null) {
+                rs = stmt.executeQuery("SELECT * FROM vehicle ORDER BY "); //>> no input from customer
+            } else if (vtname != null && location != null) {
+                    PreparedStatement ps = connection.prepareStatement("SELECT * FROM vehicle WHERE vtname = ? AND location = ?");
+                    ps.setString(1, vtname);
+                    ps.setString(2, location);
+                    rs = ps.executeQuery();
+
+            } else if (vtname == null) {
+                PreparedStatement ps = connection.prepareStatement("SELECT * FROM vehicle WHERE location = ?");
+                ps.setString(1, location);
+                rs = ps.executeQuery();
+            } else {
+                PreparedStatement ps = connection.prepareStatement("SELECT * FROM vehicle WHERE vtname = ?");
+                ps.setString(1, vtname);
+                rs = ps.executeQuery();
+            }
+
 
 //    		// get info on ResultSet
 //    		ResultSetMetaData rsmd = rs.getMetaData();
