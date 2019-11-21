@@ -22,13 +22,16 @@ public class MainDisplay extends JFrame implements ActionListener {
     private JComboBox multSelect;
 
 
-    MainDisplay(){
+    public MainDisplay(){
         frame = new JFrame();
         frame.setSize(width, height);
         frame.setTitle("Rent-A-Car");
         setupDisplay(frame.getContentPane());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
+    }
+
+    public void showDisplay() {
         frame.setVisible(true);
     }
 
@@ -85,9 +88,9 @@ public class MainDisplay extends JFrame implements ActionListener {
             if (multString == "view vehicles"){
                 new ViewVehiclesDisplay (this);
             } else if (multString == "make reservation") {
-               // new ReservationDisplay (this);
+               // new ReserveCarDisplay (this);
             } else if (multString == "rent vehicle") {
-               // new RentVehicleDisply (this);
+               // new RentCarDisplay (this);
             } else if (multString == "return vehicle") {
                // new ReturnVehicleDisplay (this);
             } else if (multString == "generate report"){

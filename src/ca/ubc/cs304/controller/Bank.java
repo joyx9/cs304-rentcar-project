@@ -5,6 +5,7 @@ import ca.ubc.cs304.delegates.LoginWindowDelegate;
 import ca.ubc.cs304.delegates.TerminalTransactionsDelegate;
 import ca.ubc.cs304.model.BranchModel;
 import ca.ubc.cs304.ui.LoginWindow;
+import ca.ubc.cs304.ui.MainDisplay;
 import ca.ubc.cs304.ui.TerminalTransactions;
 
 /**
@@ -34,9 +35,12 @@ public class Bank implements LoginWindowDelegate, TerminalTransactionsDelegate {
 		if (didConnect) {
 			// Once connected, remove login window and start text transaction flow
 			loginWindow.dispose();
+			// todo this is what we changed!!!!!!!!!!!!!!!!!!!!!!!!!
+			// TerminalTransactions transaction = new TerminalTransactions();
+			// transaction.showMainMenu(this);
+            MainDisplay md = new MainDisplay();
+            md.showDisplay();
 
-			TerminalTransactions transaction = new TerminalTransactions();
-			transaction.showMainMenu(this);
 		} else {
 			loginWindow.handleLoginFailed();
 

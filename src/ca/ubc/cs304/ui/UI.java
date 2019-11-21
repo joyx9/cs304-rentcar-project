@@ -6,6 +6,7 @@ public class UI {
 
     public UI(){
         md = new MainDisplay();
+        md.showDisplay();
     }
 
     public static void main(String[] args){
