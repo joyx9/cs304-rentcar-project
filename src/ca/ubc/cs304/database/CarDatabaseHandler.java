@@ -95,14 +95,14 @@ public class CarDatabaseHandler {
      ***
      * Making a Reservation
      * Inputs:
+     * Output a confNo for the customer
      */
     public Integer makeReservation(String vtname, String dlicense, Date fromDate, Time fromTime,
            Date toDate, Time toTime){
         Integer result = -1;
 
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO reservations VALUES (confNo_counter.nextval,?,?,?,?,?,?)");
-            // ps.setInt(1, 1); // TODO change this confNo create a counter in the database
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO reservations VALUES (reserveConfNo .nextval,?,?,?,?,?,?)");
             ps.setString(2, vtname);
             ps.setString(3, dlicense);
             ps.setDate(4, fromDate);
@@ -114,8 +114,8 @@ public class CarDatabaseHandler {
             connection.commit();
 
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT confNo FROM reservations WHERE confNo = confNo_counter.currval");
-            result = rs.getInt("confNo");
+            ResultSet rs = stmt.executeQuery("SELECT confNo FROM reservations WHERE confNo = reserveConfNo .currval");
+            result = rs.getInt("confNo"); // the confNo to return
 
             ps.close();
             rs.close();
@@ -137,8 +137,8 @@ public class CarDatabaseHandler {
      * to complete : CardNo + ExpDate
      * return a receipt displaying: confNo, date of reservation, vtname, location, rental lasts for etc.
      */
-    public RentReceipt rentVehicle(String vtname, String location) {
-        RentReceipt result;
+    public RentReceipt rentVehicle(String vtname, String location, Integer cardNo, Date expDate) {
+        RentReceipt result = null;
         ResultSet rs = null;
 
         try {
@@ -154,7 +154,7 @@ public class CarDatabaseHandler {
         }
 
         // stub
-        return null;
+        return result;
     }
 
 
