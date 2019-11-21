@@ -61,7 +61,7 @@ create table rentals
 	cardName varchar(40) not null,
 	cardNo int not null,
 	ExpDate varchar(40) not null,
-	confNo int not null,
+	confNo int,
 	primary key (rid),
 	foreign key (confNo) references reservations ON DELETE CASCADE,
 	foreign key (dlicense) references customer ON DELETE CASCADE);
