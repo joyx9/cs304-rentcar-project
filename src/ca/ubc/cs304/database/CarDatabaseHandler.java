@@ -1,6 +1,5 @@
 package ca.ubc.cs304.database;
 
-import ca.ubc.cs304.model.BranchModel;
 import ca.ubc.cs304.model.Vehicles;
 
 import java.sql.*;
@@ -62,18 +61,6 @@ public class CarDatabaseHandler {
                 rs = ps.executeQuery();
             }
 
-
-//    		// get info on ResultSet
-//    		ResultSetMetaData rsmd = rs.getMetaData();
-//
-//    		System.out.println(" ");
-//
-//    		// display column names;
-//    		for (int i = 0; i < rsmd.getColumnCount(); i++) {
-//    			// get column name and print it
-//    			System.out.printf("%-15s", rsmd.getColumnName(i + 1));
-//    		}
-
             while(rs.next()) {
                 Vehicles v = new Vehicles(rs.getString("vlicense"),
                         rs.getString("make"),
@@ -97,4 +84,8 @@ public class CarDatabaseHandler {
 
         return result.toArray(new Vehicles[result.size()]);
     }
+
+
+
+
 }
