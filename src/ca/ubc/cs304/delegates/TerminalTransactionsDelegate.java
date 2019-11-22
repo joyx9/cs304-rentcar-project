@@ -2,6 +2,8 @@ package ca.ubc.cs304.delegates;
 
 import ca.ubc.cs304.model.BranchModel;
 
+import java.util.ArrayList;
+
 /**
  * This interface uses the delegation design pattern where instead of having
  * the TerminalTransactions class try to do everything, it will only
@@ -12,7 +14,7 @@ import ca.ubc.cs304.model.BranchModel;
  * Bank is the actual class that will implement the methods.
  */
 public interface TerminalTransactionsDelegate {
-	public void getAllVehicles(String vtname, String location);
+	public ArrayList<String> getAllVehicles(String vtname, String location);
 	// public void deleteBranch(int branchId);
 	// public void insertBranch(BranchModel model);
 	// public void showBranch();
