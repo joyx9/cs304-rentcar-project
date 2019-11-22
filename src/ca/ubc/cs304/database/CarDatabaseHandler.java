@@ -34,6 +34,30 @@ public class CarDatabaseHandler {
         }
     }
 
+    /**
+     * Check if the confNo exists
+     */
+    public boolean confNoExist(Integer confNo){
+        ResultSet rs;
+        boolean ret = false;
+
+        try {
+            if (confNo != null ) {
+                PreparedStatement ps = connection.prepareStatement("SELECT * FROM reservations WHERE confNo = ? ");
+                ps.setInt(1, confNo);
+                rs = ps.executeQuery();
+                ret = rs.wasNull();
+                rs.close();
+                ps.close();
+            } else {
+                ret = false;
+            }
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+        return ret;
+    }
+
 
     /**
      * View all the vehicles
