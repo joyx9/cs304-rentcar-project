@@ -1,6 +1,7 @@
 package ca.ubc.cs304.database;
 
 import ca.ubc.cs304.model.RentReceipt;
+import ca.ubc.cs304.model.Reservations;
 import ca.ubc.cs304.model.Vehicles;
 
 import java.sql.*;
@@ -102,7 +103,7 @@ public class CarDatabaseHandler {
         Integer result = -1;
 
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO reservations VALUES (reserveConfNo .nextval,?,?,?,?,?,?)");
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO reservations VALUES (reserveConfNo.nextval,?,?,?,?,?,?)");
             ps.setString(2, vtname);
             ps.setString(3, dlicense);
             ps.setDate(4, fromDate);
@@ -114,7 +115,7 @@ public class CarDatabaseHandler {
             connection.commit();
 
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT confNo FROM reservations WHERE confNo = reserveConfNo .currval");
+            ResultSet rs = stmt.executeQuery("SELECT confNo FROM reservations WHERE confNo = reserveConfNo.currval");
             result = rs.getInt("confNo"); // the confNo to return
 
             ps.close();
@@ -137,12 +138,49 @@ public class CarDatabaseHandler {
      * to complete : CardNo + ExpDate
      * return a receipt displaying: confNo, date of reservation, vtname, location, rental lasts for etc.
      */
-    public RentReceipt rentVehicle(String vtname, String location, Integer cardNo, Date expDate) {
+    public RentReceipt rentVehicle(String vtname, String location, String cardName, Integer cardNo, Date expDate, int confNo) {
         RentReceipt result = null;
         ResultSet rs = null;
 
         try {
+            //if reservation was made
             Statement stmt = connection.createStatement();
+            if (confNo != 0) { //confNo was not empty
+                // get vtname from reservations with confNo
+                // find a car with that vtname
+                // that car will have location 
+                PreparedStatement ps = connection.prepareStatement("INSERT INTO rentals VALUES(rentID.nextval,?,?,?,?,?,?,?,?,?,?,?");
+                ps.setString(8, cardName);
+                ps.setInt(9, cardNo);
+                ps.setDate(10, expDate);
+                ps.setInt(11, confNo);
+
+                PreparedStatement getReservation = connection.prepareStatement("SELECT vtname, dlicense, reserveFromDate, reserveFromTime, reserveToDate, reserveToTime FROM reservations WHERE confNo = ?");
+                getReservation.setInt(1, confNo);
+                PreparedStatement getVehicles = connection.prepareStatement("SELECT vlicense, odometer FROM vehicle WHERE vtname = ?");
+
+                ResultSet reserveSet = getReservation.executeQuery();
+                while(reserveSet.next()) {
+                    getVehicles.setString(1, reserveSet.getString("vtname"));
+                    ps.setInt(1, reserveSet.getInt("dlicense"));
+                    ps.setDate(3, reserveSet.getDate("reserveFromDate"));
+                    ps.setTime(4, reserveSet.getTime("reserveFromTime"));
+                    ps.setDate(5, reserveSet.getDate("reserveToDate"));
+                    ps.setTime(6, reserveSet.getTime("reserveToTime"));
+                }
+                
+                ResultSet vehicleSet = getVehicles.executeQuery();
+                while (vehicleSet.first()) {
+                    ps.setInt(2, vehicleSet.getInt("vlicense"));
+                    ps.setInt(7, vehicleSet.getInt("odometer"));
+                }
+
+                ps.executeUpdate();
+                connection.commit();
+
+                //need to return confNo, rental lasts for can just be fromDate and toDate
+                //return vtname, location <- this comes from the vehicle relation....using rentals foreign key vlicense
+            }
             if (vtname == null && location == null) {
                 rs = stmt.executeQuery("SELECT * FROM vehicle ORDER BY "); //>> no input from customer
             }

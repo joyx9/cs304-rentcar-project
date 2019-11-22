@@ -4,6 +4,8 @@ drop table reservations;
 drop table customer;
 drop table vehicle;
 drop table vehicletype;
+drop sequence reserveConfNo;
+drop sequence rentID;
 
 create table vehicletype
 	(vtname varchar(40) not null,
@@ -53,9 +55,10 @@ create table reservations
 create table rentals
 	(rid int not null,
 	dlicense int not null,
+	vlicense int not null,
 	rentFromDate varchar(40) not null,
 	rentFromTime varchar(40) not null,
-	renttoDate varchar(40) not null,
+	rentToDate varchar(40) not null,
 	rentToTime varchar(40) not null,
 	odometer int not null,
 	cardName varchar(40) not null,
@@ -63,6 +66,7 @@ create table rentals
 	ExpDate varchar(40) not null,
 	confNo int,
 	primary key (rid),
+	foreign key (vlicense) references vehicle ON DELETE CASCADE,
 	foreign key (confNo) references reservations ON DELETE CASCADE,
 	foreign key (dlicense) references customer ON DELETE CASCADE);
 
@@ -78,6 +82,10 @@ create table returns
 	check (fulltank = 'y' or fulltank ='n'));
 
 create sequence reserveConfNo 
+start with 1
+increment by 1;
+
+create sequence rentID
 start with 1
 increment by 1;
 
