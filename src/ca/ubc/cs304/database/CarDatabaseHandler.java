@@ -60,6 +60,31 @@ public class CarDatabaseHandler {
 
 
     /**
+     * Check if the rid exists in rentals
+     */
+    public boolean ridExist(Integer rid){
+        ResultSet rs;
+        boolean ret = false;
+
+        try {
+            if (rid != null ) {
+                PreparedStatement ps = connection.prepareStatement("SELECT * FROM rentals WHERE rid = ? ");
+                ps.setInt(1, rid);
+                rs = ps.executeQuery();
+                ret = rs.wasNull();
+                rs.close();
+                ps.close();
+            } else {
+                ret = false;
+            }
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+        return ret;
+    }
+
+
+    /**
      * View all the vehicles
      * Customers are able to choose: vtname, location, timeInterval[*PIAZZA*]
      *           if not inputs view all
@@ -70,15 +95,15 @@ public class CarDatabaseHandler {
 
         try {
             Statement stmt = connection.createStatement();
-            if (vtname == null && location == null) {
+            if (vtname ==  "" && location == "") {
                 rs = stmt.executeQuery("SELECT * FROM vehicle ORDER BY "); //>> no input from customer
-            } else if (vtname != null && location != null) {
+            } else if (vtname != "" && location != "") {
                     PreparedStatement ps = connection.prepareStatement("SELECT * FROM vehicle WHERE vtname = ? AND location = ?");
                     ps.setString(1, vtname);
                     ps.setString(2, location);
                     rs = ps.executeQuery();
 
-            } else if (vtname == null) {
+            } else if (vtname == "") {
                 PreparedStatement ps = connection.prepareStatement("SELECT * FROM vehicle WHERE location = ?");
                 ps.setString(1, location);
                 rs = ps.executeQuery();
@@ -218,6 +243,76 @@ public class CarDatabaseHandler {
         // stub
         return result;
     }
+
+    /**
+     *  Returning a vehicle
+     *  When returning a vehicle, the system will display a receipt with the necessary details
+     *  (e.g., reservation confirmation number, date of return, how the total was calculated etc.)
+     *  if the vehicle is not rented throw error message
+     *  Clerk enters:date, the time, the odometer reading, and  gas tank is full?
+     *
+     */
+    public ArrayList<String> returnVehicle(int rid, String returnDate, int odometer, String gasTankFull){
+        ArrayList<String> returnRecipt = new ArrayList<>();
+
+        try {
+            //if rid does not exist return empty string
+            if (!ridExist(rid)){
+                returnRecipt.add("Sorry this rental id does not exist.");
+            } else {
+
+                Integer totalCost = -1;
+                PreparedStatement ps = connection.prepareStatement("INSERT INTO returns VALUES (?,?,?,?)");
+                ps.setInt(1, rid);
+                ps.setString(2, returnDate);
+                ps.setInt(3, odometer);
+                ps.setString(4, gasTankFull);
+
+                ps.executeUpdate();
+                connection.commit();
+
+                PreparedStatement cs = connection.prepareStatement("SELECT odometer FROM rentals" +
+                        "WHERE rid = ?");
+                cs.setInt(1, rid);
+                ResultSet rs = cs.executeQuery();
+
+//
+//
+//                Statement stmt = connection.createStatement(); //TODO
+//                ResultSet rs = stmt.executeQuery("SELECT confNo FROM reservations WHERE confNo = reserveConfNo.currval");
+//                result = Integer.toString(rs.getInt("confNo")); // the confNo to return
+
+                ps.close();
+                rs.close();
+                //stmt.close();
+
+
+
+
+
+
+
+
+
+
+            }
+
+
+                //need to return confNo, rental lasts for can just be fromDate and toDate
+                //return vtname, location <- this comes from the vehicle relation....using rentals foreign key vlicense
+
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+
+
+
+
+
+        return returnRecipt;
+    }
+
 
 
     /**
