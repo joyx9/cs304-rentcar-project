@@ -1,9 +1,12 @@
 package ca.ubc.cs304.ui;
 
+import ca.ubc.cs304.delegates.TerminalTransactionsDelegate;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import static java.awt.GridBagConstraints.RELATIVE;
@@ -12,6 +15,7 @@ public class ViewVehiclesDisplay extends JFrame implements ActionListener {
     private static Font defaultFont = new Font("Courier New", Font.PLAIN, 25);
     private static int width = 1000;
     private static int height = 800;
+    private TerminalTransactionsDelegate delegate;
     private JFrame frame;
     private GridBagConstraints gbc;
     private JLabel label;
@@ -22,8 +26,10 @@ public class ViewVehiclesDisplay extends JFrame implements ActionListener {
     private JTextField locationtf;
     private JTextField timetf;
     private JTextArea report;
+    private ArrayList<String> vehicles;
 
-    ViewVehiclesDisplay(MainDisplay md){
+    ViewVehiclesDisplay(MainDisplay md, TerminalTransactionsDelegate delegate){
+        this.delegate = delegate;
         frame = new JFrame();
         frame.setTitle("Rent-A-Car View Vehicles");
         mainDisplay = md;
@@ -141,9 +147,8 @@ public class ViewVehiclesDisplay extends JFrame implements ActionListener {
         pane.add(button, gbc);
     }
 
-    private void showNumVehicles(){
+    private void showNumVehicles(String num){
         // adds "num available vehicles" button
-        String num = "!!!!!";
         button = new JButton("# of available vehicles:" + num);
         button.setFont(defaultFont);
         button.addActionListener(this);
@@ -156,12 +161,15 @@ public class ViewVehiclesDisplay extends JFrame implements ActionListener {
         frame.repaint();
     }
 
-    private void showVehicleDetails(String str){
+    private void showVehicleDetails(ArrayList<String> str){
         report = new JTextArea();
-        report.setText(str);
         report.setFont(defaultFont);
         report.setLineWrap(true);
         report.setWrapStyleWord(true);
+        report.setText("");
+        for (String s: str) {
+            report.append(s);
+        }
         report.setEditable(false);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridwidth = 2;
@@ -176,15 +184,15 @@ public class ViewVehiclesDisplay extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getActionCommand()== "showPressed"){
-            this.showNumVehicles();
+            // todo get the vehicle details using vtname and location, then save vtnumber
+            vehicles = this.delegate.getAllVehicles(carTypetf.getText(), locationtf.getText());
+            this.showNumVehicles(Integer.toString(vehicles.size()));
         } else if (e.getActionCommand() == "backPressed"){
             mainDisplay.returnFromDisplay();
             frame.setVisible(false);
         } else if (e.getActionCommand() == "detailsPressed"){
             // new ViewVehicleDetailDisplay(mainDisplay);
-            // todo get the vehicle details
-            String s = "vehicle details !!!!!!!!!!!!!";
-            this.showVehicleDetails(s);
+            this.showVehicleDetails(vehicles);
         }
     }
 }

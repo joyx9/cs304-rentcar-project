@@ -174,7 +174,7 @@ public class RentCarDisplay extends JFrame implements ActionListener {
             boolean hasReservation = true;
             this.displayNext(hasReservation);
         } else if (e.getActionCommand() == "confirmPressed"){
-            // todo get receipt!!!!!
+            // todo get receipt !!!!!
             String str = "Receipt!!!!!!!!!!!!!!!!!!!";
             this.displayReceipt(str);
         }

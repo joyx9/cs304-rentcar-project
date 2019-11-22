@@ -1,5 +1,7 @@
 package ca.ubc.cs304.ui;
 
+import ca.ubc.cs304.delegates.TerminalTransactionsDelegate;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.regex.Pattern;
 
 public class MainDisplay extends JFrame implements ActionListener {
+    public TerminalTransactionsDelegate delegate = null;
     private static String[] multStrings= {"view vehicles", "make reservation", "rent vehicle",
                                             "return vehicle", "generate report"};
     private static Font defaultFont = new Font("Courier New", Font.PLAIN, 25);
@@ -29,7 +32,8 @@ public class MainDisplay extends JFrame implements ActionListener {
         frame.setLocationRelativeTo(null);
     }
 
-    public void showDisplay() {
+    public void showDisplay(TerminalTransactionsDelegate delegate) {
+        this.delegate = delegate;
         frame.setVisible(true);
     }
 
@@ -74,7 +78,7 @@ public class MainDisplay extends JFrame implements ActionListener {
         if(e.getActionCommand()== "okPressed"){
             String multString = (String) multSelect.getSelectedItem();
             if (multString == "view vehicles"){
-                new ViewVehiclesDisplay (this);
+                new ViewVehiclesDisplay (this, delegate);
             } else if (multString == "make reservation") {
                new ReserveCarDisplay (this);
             } else if (multString == "rent vehicle") {

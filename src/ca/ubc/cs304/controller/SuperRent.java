@@ -10,6 +10,8 @@ import ca.ubc.cs304.ui.LoginWindow;
 import ca.ubc.cs304.ui.MainDisplay;
 import ca.ubc.cs304.ui.TerminalTransactions;
 
+import java.util.ArrayList;
+
 /**
  * This is the main controller class that will orchestrate everything.
  */
@@ -43,7 +45,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 			// TerminalTransactions transaction = new TerminalTransactions();
 			// transaction.showMainMenu(this);
             MainDisplay md = new MainDisplay();
-            md.showDisplay();
+            md.showDisplay(this);
 
 		} else {
 			loginWindow.handleLoginFailed();
@@ -56,8 +58,18 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 		}
 	}
 
-	public void getAllVehicles(String vtname, String location) {
+	public ArrayList<String> getAllVehicles(String vtname, String location) {
 		Vehicles[] vehicles = carHandler.getAllVehicles(vtname, location);
+		ArrayList<String> resultStr = new ArrayList<>();
+        for (int i = 0; i < vehicles.length; i++) {
+            Vehicles vehicle = vehicles[i];
+            // simplified output formatting; truncation may occur
+            String str = vehicle.getCity() + vehicle.getColor() + vehicle.getLocation()
+                    + vehicle.getMake() + vehicle.getModel() + vehicle.getStatus() + vehicle.getVlicense();
+
+            resultStr.add(str);
+        }
+        return resultStr;
 	}
 	
 	// /**
@@ -93,31 +105,31 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 	//  * 
 	//  * Displays information about varies superRent branches.
 	//  */
-    // public void showBranch() {
-    // 	BranchModel[] models = dbHandler.getBranchInfo();
-    	
-    // 	for (int i = 0; i < models.length; i++) {
-    // 		BranchModel model = models[i];
-    		
-    // 		// simplified output formatting; truncation may occur
-    // 		System.out.printf("%-10.10s", model.getId());
-    // 		System.out.printf("%-20.20s", model.getName());
-    // 		if (model.getAddress() == null) {
-    // 			System.out.printf("%-20.20s", " ");
-    // 		} else {
-    // 			System.out.printf("%-20.20s", model.getAddress());
-    // 		}
-    // 		System.out.printf("%-15.15s", model.getCity());
-    // 		if (model.getPhoneNumber() == 0) {
-    // 			System.out.printf("%-15.15s", " ");
-    // 		} else {
-    // 			System.out.printf("%-15.15s", model.getPhoneNumber());
-    // 		}
-    		
-    // 		System.out.println();
-    // 	}
-    // }
-	
+//     public void showBranch() {
+//     	BranchModel[] models = dbHandler.getBranchInfo();
+//
+//     	for (int i = 0; i < models.length; i++) {
+//     		BranchModel model = models[i];
+//
+//     		// simplified output formatting; truncation may occur
+//     		System.out.printf("%-10.10s", model.getId());
+//     		System.out.printf("%-20.20s", model.getName());
+//     		if (model.getAddress() == null) {
+//     			System.out.printf("%-20.20s", " ");
+//     		} else {
+//     			System.out.printf("%-20.20s", model.getAddress());
+//     		}
+//     		System.out.printf("%-15.15s", model.getCity());
+//     		if (model.getPhoneNumber() == 0) {
+//     			System.out.printf("%-15.15s", " ");
+//     		} else {
+//     			System.out.printf("%-15.15s", model.getPhoneNumber());
+//     		}
+//
+//     		System.out.println();
+//     	}
+//     }
+//
     /**
 	 * TerminalTransactionsDelegate Implementation
 	 * 
