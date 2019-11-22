@@ -16,9 +16,7 @@ public class Rentals {
     private final String  vlicense; // vehicle is now identified by vlicense -> old: vid
     private final String dlicense; // customer is now identified by dlicense -> old: cellphone
     private final Date fromDate;
-    private final Time fromTime;
     private final Date toDate;
-    private final Time toTime;
     private final int odometer;
     private final String cardName;
     private final int cardNo;
@@ -26,15 +24,13 @@ public class Rentals {
     private final int confNo;
 
 
-    public Rentals(int rid, String vlicense, String dlicense, Date fromDate, Time fromTime,
-                   Date toDate, Time toTime, int odometer, String cardName, int cardNo, Date expDate, int confNo) {
+    public Rentals(int rid, String vlicense, String dlicense, Date fromDate,
+                   Date toDate, int odometer, String cardName, int cardNo, Date expDate, int confNo) {
         this.rid = rid;
         this.vlicense = vlicense;
         this.dlicense = dlicense;
         this.fromDate = fromDate;
-        this.fromTime = fromTime;
         this.toDate = toDate;
-        this.toTime = toTime;
         this.odometer = odometer;
         this.cardName = cardName;
         this.cardNo = cardNo;
@@ -58,16 +54,8 @@ public class Rentals {
         return toDate;
     }
 
-    public Time getToTime() {
-        return toTime;
-    }
-
     public Date getFromDate() {
         return fromDate;
-    }
-
-    public Time getFromTime() {
-        return fromTime;
     }
 
     public Integer getOdometer() {
