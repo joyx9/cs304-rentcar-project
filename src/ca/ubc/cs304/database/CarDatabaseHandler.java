@@ -103,13 +103,13 @@ public class CarDatabaseHandler {
         Integer result = -1;
 
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO reservations VALUES (reserveConfNo.nextval,?,?,?,?,?,?)");
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO reservations VALUES (reserveConfNo.nextval,?,?,?,?)");
             ps.setString(2, vtname);
             ps.setString(3, dlicense);
             ps.setDate(4, fromDate);
-            ps.setTime(5, fromTime);
-            ps.setDate(6, toDate);
-            ps.setTime(7, toTime);
+            //ps.setTime(5, fromTime);
+            ps.setDate(5, toDate);
+            //ps.setTime(6, toTime);
 
             ps.executeUpdate();
             connection.commit();
@@ -149,11 +149,11 @@ public class CarDatabaseHandler {
                 // get vtname from reservations with confNo
                 // find a car with that vtname
                 // that car will have location 
-                PreparedStatement ps = connection.prepareStatement("INSERT INTO rentals VALUES(rentID.nextval,?,?,?,?,?,?,?,?,?,?,?");
-                ps.setString(8, cardName);
-                ps.setInt(9, cardNo);
-                ps.setDate(10, expDate);
-                ps.setInt(11, confNo);
+                PreparedStatement ps = connection.prepareStatement("INSERT INTO rentals VALUES(rentID.nextval,?,?,?,?,?,?,?,?,?");
+                ps.setString(6, cardName);
+                ps.setInt(7, cardNo);
+                ps.setDate(8, expDate);
+                ps.setInt(9, confNo);
 
                 PreparedStatement getReservation = connection.prepareStatement("SELECT vtname, dlicense, reserveFromDate, reserveFromTime, reserveToDate, reserveToTime FROM reservations WHERE confNo = ?");
                 getReservation.setInt(1, confNo);
@@ -164,15 +164,15 @@ public class CarDatabaseHandler {
                     getVehicles.setString(1, reserveSet.getString("vtname"));
                     ps.setInt(1, reserveSet.getInt("dlicense"));
                     ps.setDate(3, reserveSet.getDate("reserveFromDate"));
-                    ps.setTime(4, reserveSet.getTime("reserveFromTime"));
-                    ps.setDate(5, reserveSet.getDate("reserveToDate"));
-                    ps.setTime(6, reserveSet.getTime("reserveToTime"));
+                    //ps.setTime(4, reserveSet.getTime("reserveFromTime"));
+                    ps.setDate(4, reserveSet.getDate("reserveToDate"));
+                    //ps.setTime(6, reserveSet.getTime("reserveToTime"));
                 }
                 
                 ResultSet vehicleSet = getVehicles.executeQuery();
                 while (vehicleSet.first()) {
                     ps.setInt(2, vehicleSet.getInt("vlicense"));
-                    ps.setInt(7, vehicleSet.getInt("odometer"));
+                    ps.setInt(5, vehicleSet.getInt("odometer"));
                 }
 
                 ps.executeUpdate();
