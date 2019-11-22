@@ -4,12 +4,14 @@ import ca.ubc.cs304.database.CarDatabaseHandler;
 import ca.ubc.cs304.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.delegates.LoginWindowDelegate;
 import ca.ubc.cs304.delegates.TerminalTransactionsDelegate;
+import ca.ubc.cs304.model.RentReceipt;
 import ca.ubc.cs304.model.Vehicles;
 import ca.ubc.cs304.model.BranchModel;
 import ca.ubc.cs304.ui.LoginWindow;
 import ca.ubc.cs304.ui.MainDisplay;
 import ca.ubc.cs304.ui.TerminalTransactions;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 /**
@@ -58,19 +60,33 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 		}
 	}
 
-	public ArrayList<String> getAllVehicles(String vtname, String location) {
+	public ArrayList<String[]> getAllVehicles(String vtname, String location) {
 		Vehicles[] vehicles = carHandler.getAllVehicles(vtname, location);
-		ArrayList<String> resultStr = new ArrayList<>();
+		ArrayList<String[]> resultStr = new ArrayList<>();
         for (int i = 0; i < vehicles.length; i++) {
             Vehicles vehicle = vehicles[i];
-            // simplified output formatting; truncation may occur
-            String str = vehicle.getCity() + vehicle.getColor() + vehicle.getLocation()
-                    + vehicle.getMake() + vehicle.getModel() + vehicle.getStatus() + vehicle.getVlicense();
+            String[] str = new String[] {vehicle.getLocation(), vehicle.getMake(),
+                    vehicle.getModel(), vehicle.getVlicense(),
+                    vehicle.getCity(), vehicle.getColor(), vehicle.getStatus()};
 
             resultStr.add(str);
         }
         return resultStr;
 	}
+
+    public String makeReservation(String vtname, String dlicense, String fromDate, String toDate) {
+	    return null;
+    }
+
+    public String rentVehicle(String vtname, String location, String cardName,
+                              Integer cardNo, String expDate, int confNo){
+	    RentReceipt rentReceipt = carHandler.rentVehicle(vtname, location, cardName, cardNo, expDate, confNo);
+	    String str = "Confirmation Number: " + rentReceipt.getConfNo() + " Date Rented: " + rentReceipt.getResDate() +
+                " Location: " + rentReceipt.getLocation() + " Vehicle: " + rentReceipt.getVtname();
+
+	    str += "   Thank you for renting from SuperRent!";
+	    return str;
+    }
 	
 	// /**
 	//  * TermainalTransactionsDelegate Implementation

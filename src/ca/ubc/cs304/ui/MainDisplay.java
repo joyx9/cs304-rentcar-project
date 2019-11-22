@@ -82,7 +82,7 @@ public class MainDisplay extends JFrame implements ActionListener {
             } else if (multString == "make reservation") {
                new ReserveCarDisplay (this);
             } else if (multString == "rent vehicle") {
-               new RentCarDisplay (this);
+               new RentCarDisplay (this, delegate);
             } else if (multString == "return vehicle") {
                 new ReturnCarDisplay (this);
             } else if (multString == "generate report"){

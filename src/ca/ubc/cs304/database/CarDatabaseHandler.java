@@ -90,7 +90,7 @@ public class CarDatabaseHandler {
      *           if not inputs view all
      */
     public Vehicles[] getAllVehicles(String vtname, String location) {
-        ArrayList<Vehicles> result = new ArrayList<Vehicles>();
+        ArrayList<Vehicles> result = new ArrayList<>();
         ResultSet rs;
 
         try {
@@ -127,7 +127,6 @@ public class CarDatabaseHandler {
                 result.add(v);
             }
 
-
             rs.close();
             stmt.close();
         } catch (SQLException e) {
@@ -144,7 +143,7 @@ public class CarDatabaseHandler {
      ***
      ***
      * Making a Reservation
-     * Inputs:
+     * Inputs: vtname, dlicense, fromdate, todate
      * Output a confNo for the customer
      */
     public String makeReservation(String vtname, String dlicense, String fromDate, String toDate){

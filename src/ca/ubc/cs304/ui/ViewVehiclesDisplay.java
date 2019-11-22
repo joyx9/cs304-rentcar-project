@@ -3,6 +3,7 @@ package ca.ubc.cs304.ui;
 import ca.ubc.cs304.delegates.TerminalTransactionsDelegate;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,13 +21,14 @@ public class ViewVehiclesDisplay extends JFrame implements ActionListener {
     private GridBagConstraints gbc;
     private JLabel label;
     private JButton button;
+    private JButton showavbutton;
     private JTextArea vehicleText;
     private MainDisplay mainDisplay;
     private JTextField carTypetf;
     private JTextField locationtf;
     private JTextField timetf;
-    private JTextArea report;
-    private ArrayList<String> vehicles;
+    private JTable report;
+    private ArrayList<String[]> vehicles;
 
     ViewVehiclesDisplay(MainDisplay md, TerminalTransactionsDelegate delegate){
         this.delegate = delegate;
@@ -127,14 +129,14 @@ public class ViewVehiclesDisplay extends JFrame implements ActionListener {
         pane.add(timetf, gbc);
 
         // adds "show available vehicles" button
-        button = new JButton("show available vehicles");
-        button.setFont(defaultFont);
-        button.addActionListener(this);
-        button.setActionCommand("showPressed");
+        showavbutton = new JButton("show available vehicles");
+        showavbutton.setFont(defaultFont);
+        showavbutton.addActionListener(this);
+        showavbutton.setActionCommand("showPressed");
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 5;
-        pane.add(button, gbc);
+        pane.add(showavbutton, gbc);
 
         // adds "back to main" button
         button = new JButton("back to main");
@@ -161,32 +163,58 @@ public class ViewVehiclesDisplay extends JFrame implements ActionListener {
         frame.repaint();
     }
 
-    private void showVehicleDetails(ArrayList<String> str){
-        report = new JTextArea();
-        report.setFont(defaultFont);
-        report.setLineWrap(true);
-        report.setWrapStyleWord(true);
-        report.setText("");
-        for (String s: str) {
-            report.append(s);
+    private void showVehicleDetails(ArrayList<String[]> str){
+        // remove some buttons
+        frame.getContentPane().remove(showavbutton);
+        // shows details in a table todo
+        // headers for the table
+        String[] columns = new String[] {
+                "Location", "Make", "Model", "License", "City", "Color", "Status"
+        };
+        Object[][] data = new Object[][] {};
+        // create table with data
+        JTable report = new JTable(data, columns);
+        JScrollPane jScrollPane = new JScrollPane(report);
+        DefaultTableModel dtm = new DefaultTableModel(0, 7);
+        report.setModel(dtm);
+        // for each vehicle, add each string in the array to the appropriate column
+        for (int i = 0; i < vehicles.size(); i++){
+            dtm.addRow(new Object[]{
+                   vehicles.get(i)[0], vehicles.get(i)[1], vehicles.get(i)[2],
+                    vehicles.get(i)[3], vehicles.get(i)[4], vehicles.get(i)[5], vehicles.get(i)[6]
+            });
+            System.out.println(vehicles.get(i)[0]);
         }
-        report.setEditable(false);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridwidth = 2;
         gbc.gridx = 0;
         gbc.gridy = RELATIVE;
-        gbc.ipadx = 80;
-        gbc.ipady = 40;
-        frame.getContentPane().add(report, gbc);
+        frame.getContentPane().add(jScrollPane,
+                new GridBagConstraints(0, RELATIVE, 1, 1, 1.0,
+                        1.0, GridBagConstraints.SOUTH, GridBagConstraints.BOTH,
+                        new Insets(5, 5, 5, 5), 0, 0));
         frame.revalidate();
         frame.repaint();
+        //        report = new JTextArea();
+//        report.setFont(defaultFont);
+//        report.setLineWrap(true);
+//        report.setWrapStyleWord(true);
+//        report.setText("");
+//        for (String s: str) {
+//            report.append(s);
+//        }
+//        report.setEditable(false);
     }
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getActionCommand()== "showPressed"){
             // todo get the vehicle details using vtname and location, then save vtnumber
-            vehicles = this.delegate.getAllVehicles(carTypetf.getText(), locationtf.getText());
+            vehicles = delegate.getAllVehicles(carTypetf.getText(), locationtf.getText());
+//            String[] str = new String[]{"a", "b", "c", "d", "e", "f", "g"};
+//            vehicles = new ArrayList<>();
+//            vehicles.add(str);
             this.showNumVehicles(Integer.toString(vehicles.size()));
+            System.out.println("cartype_tf:" + carTypetf.getText() + "_location_tf:" + locationtf.getText());
         } else if (e.getActionCommand() == "backPressed"){
             mainDisplay.returnFromDisplay();
             frame.setVisible(false);

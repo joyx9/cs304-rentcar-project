@@ -14,7 +14,10 @@ import java.util.ArrayList;
  * Bank is the actual class that will implement the methods.
  */
 public interface TerminalTransactionsDelegate {
-	public ArrayList<String> getAllVehicles(String vtname, String location);
+	public ArrayList<String[]> getAllVehicles(String vtname, String location);
+	public String makeReservation(String vtname, String dlicense, String fromDate, String toDate);
+	public String rentVehicle(String vtname, String location, String cardName,
+                              Integer cardNo, String expDate, int confNo);
 	// public void deleteBranch(int branchId);
 	// public void insertBranch(BranchModel model);
 	// public void showBranch();

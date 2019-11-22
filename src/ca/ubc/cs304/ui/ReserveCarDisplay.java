@@ -41,14 +41,6 @@ public class ReserveCarDisplay extends JFrame implements ActionListener {
     private void setupDisplay(Container pane) {
         pane.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
-        // adds introductory label
-        label = new JLabel();
-        label.setText("Here is a list of all vehicles:");
-        label.setFont(defaultFont);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        pane.add(label, gbc);
 
         // adds button & label for car type
         label = new JLabel();

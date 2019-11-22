@@ -1,5 +1,7 @@
 package ca.ubc.cs304.ui;
 
+import ca.ubc.cs304.delegates.TerminalTransactionsDelegate;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,6 +14,7 @@ public class RentCarDisplay extends JFrame implements ActionListener {
     private static Font defaultFont = new Font("Courier New", Font.PLAIN, 25);
     private static int width = 1000;
     private static int height = 800;
+    private TerminalTransactionsDelegate delegate;
     private JFrame frame;
     private GridBagConstraints gbc;
     private JLabel label;
@@ -20,14 +23,17 @@ public class RentCarDisplay extends JFrame implements ActionListener {
     private JTextField conftf;
     private JTextField cardNotf;
     private JTextField expDatetf;
+    private JTextField cardNametf;
     private JButton backButton;
+    private JButton confirmButton;
 
 
-    RentCarDisplay(MainDisplay md){
+    RentCarDisplay(MainDisplay md, TerminalTransactionsDelegate delegate){
         frame = new JFrame();
         frame.setSize(width, height);
         frame.setTitle("Rent-A-Car");
         mainDisplay = md;
+        this.delegate = delegate;
         setupDisplay(frame.getContentPane());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -93,7 +99,7 @@ public class RentCarDisplay extends JFrame implements ActionListener {
         } else {
             // remove the 'next' button
             frame.getContentPane().remove(button);
-            // add the following inputs: cardNo, ExpDate
+            // add the following inputs: cardNo, ExpDate, cardName
             // add cardNo
             JLabel lcard = new JLabel();
             lcard.setText("credit card number:");
@@ -130,22 +136,43 @@ public class RentCarDisplay extends JFrame implements ActionListener {
             gbc.gridy = 5;
             frame.getContentPane().add(expDatetf, gbc);
 
+            // add cardName
+            JLabel lcname = new JLabel("Card Expiry Date");
+            lcname.setText("credit card expiry date:");
+            lcname.setFont(defaultFont);
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.gridx = 0;
+            gbc.gridy = 6;
+            frame.getContentPane().add(lcname, gbc);
+
+            cardNametf = new JTextField(20);
+            cardNametf.setFont(defaultFont);
+            cardNametf.setMinimumSize(new Dimension(30, 10));
+            cardNametf.setText("");
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.gridx = 1;
+            gbc.gridy = 6;
+            frame.getContentPane().add(cardNametf, gbc);
+
             // adds "confirm rental" button
-            button = new JButton("Confirm Rental");
-            button.setFont(defaultFont);
-            button.addActionListener(this);
-            button.setActionCommand("confirmPressed");
+            confirmButton = new JButton("Confirm Rental");
+            confirmButton.setFont(defaultFont);
+            confirmButton.addActionListener(this);
+            confirmButton.setActionCommand("confirmPressed");
             gbc.fill = GridBagConstraints.HORIZONTAL;
             gbc.gridwidth = 2;
             gbc.gridx = 0;
             gbc.gridy = RELATIVE;
-            frame.getContentPane().add(button, gbc);
+            frame.getContentPane().add(confirmButton, gbc);
         }
         frame.revalidate();
         frame.repaint();
     }
 
     private void displayReceipt(String str){
+        // remove "confirm" button
+        frame.getContentPane().remove(confirmButton);
+
         // adds text field with all vehicle names
         JTextArea receipt = new JTextArea();
         receipt.setText("YOUR RECEIPT:" + str);
@@ -170,12 +197,16 @@ public class RentCarDisplay extends JFrame implements ActionListener {
             mainDisplay.returnFromDisplay();
             frame.setVisible(false);
         } else if (e.getActionCommand() == "nextPressed"){
-            // todo check if they have a reservation !!!!!!!!!!
+            // todo check if they have a reservation !!! Again, I need the backend to work lol
             boolean hasReservation = true;
             this.displayNext(hasReservation);
         } else if (e.getActionCommand() == "confirmPressed"){
-            // todo get receipt !!!!!
+            // todo get receipt
             String str = "Receipt!!!!!!!!!!!!!!!!!!!";
+        // String str = delegate.rentVehicle(vtname, location, cardName, cardNo, expDate, confNo);
+            // we need to use this line below. it doesn't work until delegate changes though lol
+//            String str = delegate.rentVehicle(cardNametf.getText(), cardNotf.getText(),
+//                    expDatetf.getText(), conftf.getText());
             this.displayReceipt(str);
         }
     }
