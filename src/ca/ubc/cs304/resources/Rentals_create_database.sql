@@ -53,7 +53,7 @@ create table reservations
 create table rentals
 	(rid int not null,
 	dlicense int not null,
-	vlicense int not null,
+	vlicense varchar(40) not null,
 	rentFromDate varchar(40) not null,
 	rentToDate varchar(40) not null,
 	odometer int not null,
