@@ -96,7 +96,7 @@ public class CarDatabaseHandler {
         try {
             Statement stmt = connection.createStatement();
             if (vtname.equals("") && location.equals("")) {
-                rs = stmt.executeQuery("SELECT * FROM vehicle ORDER BY "); //>> no input from customer
+                rs = stmt.executeQuery("SELECT * FROM vehicle ORDER BY location"); //>> no input from customer
             } else if (!vtname.equals("") && !location.equals("")) {
                     PreparedStatement ps = connection.prepareStatement("SELECT * FROM vehicle WHERE vtname = ? AND location = ?");
                     ps.setString(1, vtname);
