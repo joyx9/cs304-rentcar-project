@@ -68,9 +68,9 @@ public class CarDatabaseHandler {
                 Vehicles v = new Vehicles(rs.getString("vlicense"),
                         rs.getString("make"),
                         rs.getString("model"), //model
-                        rs.getInt("year"), //year
+                        Integer.toString(rs.getInt("year")), //year
                         rs.getString("color"), //color
-                        rs.getInt("odometer"), //odometer
+                        Integer.toString(rs.getInt("odometer")), //odometer
                         rs.getString("status"), //status
                         rs.getString("vtname"), //vtname
                         rs.getString("location"), //location
@@ -98,9 +98,9 @@ public class CarDatabaseHandler {
      * Inputs:
      * Output a confNo for the customer
      */
-    public Integer makeReservation(String vtname, String dlicense, Date fromDate, Time fromTime,
-           Date toDate, Time toTime){
-        Integer result = -1;
+    public String makeReservation(String vtname, String dlicense, Date fromDate, Date toDate){
+
+        String result = "";
 
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO reservations VALUES (reserveConfNo.nextval,?,?,?,?)");
@@ -116,7 +116,7 @@ public class CarDatabaseHandler {
 
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT confNo FROM reservations WHERE confNo = reserveConfNo.currval");
-            result = rs.getInt("confNo"); // the confNo to return
+            result = Integer.toString(rs.getInt("confNo")); // the confNo to return
 
             ps.close();
             rs.close();

@@ -13,17 +13,17 @@ public class Vehicles {
     private final String vlicense;
     private final String make;
     private final String model;
-    private final int year;
+    private final String year;
     private final String color;
-    private final int odometer;
+    private final String odometer;
     private final String status; // rented|in shop for maintenance|available
     private final String vtname;
     private final String location;
     private final String city;
 
 
-    public Vehicles(String vlicense, String make, String model, int year, String color,
-                    int odometer, String status, String vtname, String location, String city) {
+    public Vehicles(String vlicense, String make, String model, String year, String color,
+                    String odometer, String status, String vtname, String location, String city) {
 
         this.vlicense = vlicense;
         this.make = make;
@@ -51,7 +51,7 @@ public class Vehicles {
         return model;
     }
 
-    public Integer getYear() {
+    public String getYear() {
         return year;
     }
 
@@ -59,7 +59,7 @@ public class Vehicles {
         return color;
     }
 
-    public Integer getOdometer() {
+    public String getOdometer() {
         return odometer;
     }
 
