@@ -95,15 +95,15 @@ public class CarDatabaseHandler {
 
         try {
             Statement stmt = connection.createStatement();
-            if (vtname ==  "" && location == "") {
+            if (vtname.equals("") && location.equals("")) {
                 rs = stmt.executeQuery("SELECT * FROM vehicle ORDER BY "); //>> no input from customer
-            } else if (vtname != "" && location != "") {
+            } else if (!vtname.equals("") && !location.equals("")) {
                     PreparedStatement ps = connection.prepareStatement("SELECT * FROM vehicle WHERE vtname = ? AND location = ?");
                     ps.setString(1, vtname);
                     ps.setString(2, location);
                     rs = ps.executeQuery();
 
-            } else if (vtname == "") {
+            } else if (vtname.equals("")) {
                 PreparedStatement ps = connection.prepareStatement("SELECT * FROM vehicle WHERE location = ?");
                 ps.setString(1, location);
                 rs = ps.executeQuery();
