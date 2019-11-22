@@ -98,7 +98,7 @@ public class CarDatabaseHandler {
      * Inputs:
      * Output a confNo for the customer
      */
-    public String makeReservation(String vtname, String dlicense, Date fromDate, Date toDate){
+    public String makeReservation(String vtname, String dlicense, String fromDate, String toDate){
 
         String result = "";
 
@@ -106,9 +106,9 @@ public class CarDatabaseHandler {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO reservations VALUES (reserveConfNo.nextval,?,?,?,?)");
             ps.setString(2, vtname);
             ps.setString(3, dlicense);
-            ps.setDate(4, fromDate);
+            ps.setString(4, fromDate);
             //ps.setTime(5, fromTime);
-            ps.setDate(5, toDate);
+            ps.setString(5, toDate);
             //ps.setTime(6, toTime);
 
             ps.executeUpdate();
@@ -138,7 +138,7 @@ public class CarDatabaseHandler {
      * to complete : CardNo + ExpDate
      * return a receipt displaying: confNo, date of reservation, vtname, location, rental lasts for etc.
      */
-    public RentReceipt rentVehicle(String vtname, String location, String cardName, Integer cardNo, Date expDate, int confNo) {
+    public RentReceipt rentVehicle(String vtname, String location, String cardName, Integer cardNo, String expDate, int confNo) {
         RentReceipt result = null;
         ResultSet rs = null;
 
@@ -152,7 +152,7 @@ public class CarDatabaseHandler {
                 PreparedStatement ps = connection.prepareStatement("INSERT INTO rentals VALUES(rentID.nextval,?,?,?,?,?,?,?,?,?");
                 ps.setString(6, cardName);
                 ps.setInt(7, cardNo);
-                ps.setDate(8, expDate);
+                ps.setString(8, expDate);
                 ps.setInt(9, confNo);
 
                 PreparedStatement getReservation = connection.prepareStatement("SELECT vtname, dlicense, reserveFromDate, reserveFromTime, reserveToDate, reserveToTime FROM reservations WHERE confNo = ?");
@@ -163,9 +163,9 @@ public class CarDatabaseHandler {
                 while(reserveSet.next()) {
                     getVehicles.setString(1, reserveSet.getString("vtname"));
                     ps.setInt(1, reserveSet.getInt("dlicense"));
-                    ps.setDate(3, reserveSet.getDate("reserveFromDate"));
+                    ps.setString(3, reserveSet.getString("reserveFromDate"));
                     //ps.setTime(4, reserveSet.getTime("reserveFromTime"));
-                    ps.setDate(4, reserveSet.getDate("reserveToDate"));
+                    ps.setString(4, reserveSet.getString("reserveToDate"));
                     //ps.setTime(6, reserveSet.getTime("reserveToTime"));
                 }
                 
