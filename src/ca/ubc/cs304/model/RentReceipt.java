@@ -30,4 +30,23 @@ public class RentReceipt {
         this.period = period;
     }
 
+    public Integer getConfNo(){
+        return confNo;
+    }
+
+    public Date getResDate(){
+        return resDate;
+    }
+
+    public String getVtname() {
+        return vtname;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public Date getPeriod() {
+        return period;
+    }
 }
