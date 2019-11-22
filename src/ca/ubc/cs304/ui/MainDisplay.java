@@ -82,7 +82,7 @@ public class MainDisplay extends JFrame implements ActionListener {
             } else if (multString == "return vehicle") {
                 new ReturnCarDisplay (this);
             } else if (multString == "generate report"){
-              //  new GenerateReportDisplay (this);
+                new GenerateReportDisplay (this);
             }
             frame.setVisible(false);
         }
