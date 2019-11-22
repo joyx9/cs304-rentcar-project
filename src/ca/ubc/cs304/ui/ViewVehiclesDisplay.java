@@ -21,13 +21,14 @@ public class ViewVehiclesDisplay extends JFrame implements ActionListener {
     private JTextField carTypetf;
     private JTextField locationtf;
     private JTextField timetf;
+    private JTextArea report;
 
     ViewVehiclesDisplay(MainDisplay md){
         frame = new JFrame();
-        frame.setSize(width, height);
         frame.setTitle("Rent-A-Car View Vehicles");
         mainDisplay = md;
         setupDisplay(frame.getContentPane());
+        frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -155,6 +156,23 @@ public class ViewVehiclesDisplay extends JFrame implements ActionListener {
         frame.repaint();
     }
 
+    private void showVehicleDetails(String str){
+        report = new JTextArea();
+        report.setText(str);
+        report.setFont(defaultFont);
+        report.setLineWrap(true);
+        report.setWrapStyleWord(true);
+        report.setEditable(false);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = RELATIVE;
+        gbc.ipadx = 80;
+        gbc.ipady = 40;
+        frame.getContentPane().add(report, gbc);
+        frame.revalidate();
+        frame.repaint();
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getActionCommand()== "showPressed"){
@@ -163,8 +181,10 @@ public class ViewVehiclesDisplay extends JFrame implements ActionListener {
             mainDisplay.returnFromDisplay();
             frame.setVisible(false);
         } else if (e.getActionCommand() == "detailsPressed"){
-            new ViewVehicleDetailDisplay(mainDisplay);
-            frame.setVisible(false);
+            // new ViewVehicleDetailDisplay(mainDisplay);
+            // todo get the vehicle details
+            String s = "vehicle details !!!!!!!!!!!!!";
+            this.showVehicleDetails(s);
         }
     }
 }
