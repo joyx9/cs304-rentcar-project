@@ -5,6 +5,8 @@ import ca.ubc.cs304.model.Reservations;
 import ca.ubc.cs304.model.Vehicles;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class CarDatabaseHandler {
@@ -218,6 +220,7 @@ public class CarDatabaseHandler {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
+            result = "Vehicle type does not exist.";
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
         }
@@ -516,12 +519,18 @@ public class CarDatabaseHandler {
 
 //    private String getDateTime() {
 //
-//        DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+//        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 //
 //        Date date = new Date();
 //
 //        return dateFormat.format(date);
 //    }
+
+private String getDate() {
+    LocalDate date = LocalDate.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    return formatter.format(date);
+}
 
 
 
