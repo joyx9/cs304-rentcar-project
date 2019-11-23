@@ -20,6 +20,9 @@ public interface TerminalTransactionsDelegate {
 	public String rentVehicle(String cardName, Integer cardNo, String expDate, int confNo, String fromDate, String toDate);
 	public String returnVehicle(int rid, String returnDate, int odometer, String gasTankFull);
 	public ArrayList<String[]>getDailyRentals();
+	public ArrayList<String[]>getDailyBranchRentals(String branchloc);
+    public ArrayList<String[]>getDailyReturns();
+    public ArrayList<String[]>getDailyBranchReturns(String branchloc);
 	public boolean reservationExists(int confno);
 	public void terminalTransactionsFinished();
 }

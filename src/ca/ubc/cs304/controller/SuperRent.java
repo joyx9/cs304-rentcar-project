@@ -119,6 +119,19 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     public ArrayList<String[]>getDailyRentals(){
      return carHandler.getDailyRentals();
     }
+
+    @Override
+    public ArrayList<String[]>getDailyBranchRentals(String branchloc){
+        return carHandler.getDailyRentalsByBranch(branchloc);
+    }
+    @Override
+    public ArrayList<String[]>getDailyReturns(){
+        return carHandler.getDailyReturns();
+    }
+    @Override
+    public ArrayList<String[]>getDailyBranchReturns(String branchloc){
+     return carHandler.getDailyReturnsByBranch(branchloc);
+    }
 	// /**
 	//  * TermainalTransactionsDelegate Implementation
 	//  * 

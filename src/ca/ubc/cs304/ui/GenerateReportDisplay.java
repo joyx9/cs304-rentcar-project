@@ -116,46 +116,45 @@ public class GenerateReportDisplay extends JFrame implements ActionListener {
     private void displayReport(ArrayList<String[]> repStr){
         // remove all buttons from frame
         frame.getContentPane().removeAll();
-        //
         // headers for the table
-        String[] columns = new String[] {
-                "location", "vehicle type", "# rented"};
-        Object[][] data = new Object[][] {};
-        // create table with data
-        JTable report = new JTable(data, columns);
-        JScrollPane jScrollPane = new JScrollPane(report);
-        DefaultTableModel dtm = new DefaultTableModel(0, 3);
-        report.setModel(dtm);
-        // for each row in repStr EXCEPT the last row, add a row to the table
-        // for the last row, add it to a jlabel
-        String totNum = "Total # of cars rented: ";
-        for (int i = 0; i < repStr.size(); i++){
-            if (i == repStr.size() -1 ){
-                totNum += repStr.get(i)[0];
-            } else {
-                dtm.addRow(new Object[]{
-                        repStr.get(i)[0], repStr.get(i)[1], repStr.get(i)[2],
-                });
-            }
-        }
-        frame.getContentPane().add(jScrollPane,
-                new GridBagConstraints(0, RELATIVE, 1, 1, 1.0,
-                        1.0, GridBagConstraints.SOUTH, GridBagConstraints.BOTH,
-                        new Insets(5, 5, 5, 5), 0, 0));
-        frame.revalidate();
-
-        // add jlabel for tot # of cars
-        JLabel ltot = new JLabel();
-        ltot.setText(totNum);
-        ltot.setFont(defaultFont);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        frame.getContentPane().add(ltot, gbc);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridwidth = 2;
-        gbc.gridx = 0;
-        gbc.gridy = RELATIVE;
+//        String[] columns = new String[] {
+//                "location", "vehicle type", "# rented"};
+//        Object[][] data = new Object[][] {};
+//        // create table with data
+//        JTable report = new JTable(data, columns);
+//        JScrollPane jScrollPane = new JScrollPane(report);
+//        DefaultTableModel dtm = new DefaultTableModel(0, 3);
+//        report.setModel(dtm);
+//        // for each row in repStr EXCEPT the last row, add a row to the table
+//        // for the last row, add it to a jlabel
+//        String totNum = "Total # of cars rented: ";
+//        for (int i = 0; i < repStr.size(); i++){
+//            if (i == repStr.size() -1 ){
+//                totNum += repStr.get(i)[0];
+//            } else {
+//                dtm.addRow(new Object[]{
+//                        repStr.get(i)[0], repStr.get(i)[1], repStr.get(i)[2],
+//                });
+//            }
+//        }
+//        frame.getContentPane().add(jScrollPane,
+//                new GridBagConstraints(0, RELATIVE, 1, 1, 1.0,
+//                        1.0, GridBagConstraints.SOUTH, GridBagConstraints.BOTH,
+//                        new Insets(5, 5, 5, 5), 0, 0));
+//        frame.revalidate();
+//
+//        // add jlabel for tot # of cars
+//        JLabel ltot = new JLabel();
+//        ltot.setText(totNum);
+//        ltot.setFont(defaultFont);
+//        gbc.fill = GridBagConstraints.HORIZONTAL;
+//        gbc.gridx = 0;
+//        gbc.gridy = 3;
+//        frame.getContentPane().add(ltot, gbc);
+//        gbc.fill = GridBagConstraints.HORIZONTAL;
+//        gbc.gridwidth = 2;
+//        gbc.gridx = 0;
+//        gbc.gridy = RELATIVE;
 
         // add back to main button
         button = new JButton("back to main");
@@ -186,21 +185,34 @@ public class GenerateReportDisplay extends JFrame implements ActionListener {
             try {
                 ArrayList<String[]> arrStr = delegate.getDailyRentals();
                 this.displayReport(arrStr);
+                new GenerateReportTable(arrStr);
             } catch (Exception exc){
                 new ErrorDisplay ("ERROR: something went wrong");
             }
         } else if (e.getActionCommand() == "rentalsBranchPressed"){
-            // todo do something else
-            String s = "List of daily rentals for branch: !!!!";
-           // this.displayReport(s);
+            try {
+                ArrayList<String[]> arrStr = delegate.getDailyBranchRentals(branchtf.getText());
+                this.displayReport(arrStr);
+                new GenerateReportTable(arrStr);
+            } catch (Exception exc){
+                new ErrorDisplay ("ERROR: something went wrong");
+            }
         } else if (e.getActionCommand() == "returnsPressed") {
-            // todo do something else
-            String s = "List of daily returns: !!!!";
-            //this.displayReport(s);
+            try {
+                ArrayList<String[]> arrStr = delegate.getDailyReturns();
+                this.displayReport(arrStr);
+                new GenerateReportTable(arrStr);
+            } catch (Exception exc){
+                new ErrorDisplay ("ERROR: something went wrong");
+            }
         } else if (e.getActionCommand() == "returnsBranchPressed") {
-            // todo do something else
-            String s = "List of daily returns for branch: !!!!";
-            //this.displayReport(s);
+            try {
+                ArrayList<String[]> arrStr = delegate.getDailyBranchReturns(branchtf.getText());
+                this.displayReport(arrStr);
+                new GenerateReportTable(arrStr);
+            } catch (Exception exc){
+                new ErrorDisplay ("ERROR: something went wrong");
+            }
         }
     }
 }

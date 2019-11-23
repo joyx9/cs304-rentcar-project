@@ -93,6 +93,7 @@ public class RentCarDisplay extends JFrame implements ActionListener {
     private void displayNext(boolean hasReservation){
         // either redirects user back to main, or asks them for rest of rental information
         if (!hasReservation) {
+            frame.getContentPane().removeAll();
             JLabel lnores = new JLabel("No reservation found. Go back to main and make a reservation");
             lnores.setFont(defaultFont);
             gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -236,12 +237,15 @@ public class RentCarDisplay extends JFrame implements ActionListener {
             mainDisplay.returnFromDisplay();
             frame.setVisible(false);
         } else if (e.getActionCommand() == "nextPressed"){
-            boolean hasReservation = true;
-            this.displayNext(hasReservation);
+            try {
+                boolean hasReservation = delegate.reservationExists(parseInt(conftf.getText()));
+                this.displayNext(hasReservation);
+            } catch (Exception exp){
+                new ErrorDisplay("ERROR: invalid inputs");
+            }
         } else if (e.getActionCommand() == "confirmPressed"){
             int cardno;
             int confnum;
-            //String str = "Receipt!!!!!!!!!!!!!!!!!!!";
             try {
                 cardno = parseInt(cardNotf.getText());
                 confnum = parseInt(conftf.getText());
