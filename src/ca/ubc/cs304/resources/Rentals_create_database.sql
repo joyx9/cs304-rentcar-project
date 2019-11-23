@@ -101,42 +101,42 @@ insert into vehicletype
 values('truck', 'big', 10, 5, 2, 100, 50, 20, 10);
 
 insert into vehicle
-values('AAA123', 'Honda', 'Accord', 2000, 'black', 10, 'economy', 'available', '654 Main St', 'Vancouver');
+values('AAA123', 'Honda', 'Accord', 2000, 'black', 10, 'economy', 'available', 'Main St', 'Vancouver');
 insert into vehicle
-values('AAA124', 'Honda', 'Pilot', 2003, 'white', 10, 'economy', 'available', '654 SuperRent St', 'Winnepeg');
+values('AAA124', 'Honda', 'Pilot', 2003, 'white', 10, 'economy', 'available', 'SuperRent St', 'Winnepeg');
 insert into vehicle
-values('AAA125', 'Mazda', 'Accord', 2010, 'blue', 10, 'economy', 'available', '654 Broadway Rd', 'Burnaby');
+values('AAA125', 'Mazda', 'Accord', 2010, 'blue', 10, 'economy', 'available', 'Broadway Rd', 'Burnaby');
 insert into vehicle
-values('AAA126', 'Lexus', 'GX', 2000, 'black', 10, 'compact', 'available', '654 Main St', 'Vancouver');
+values('AAA126', 'Lexus', 'GX', 2000, 'black', 10, 'compact', 'available', 'Main St', 'Vancouver');
 insert into vehicle
-values('AAA127', 'Hyundai', 'Accord', 1995, 'black', 10, 'compact', 'available', '654 Main St', 'Vancouver');
+values('AAA127', 'Hyundai', 'Accord', 1995, 'black', 10, 'compact', 'available', 'Main St', 'Vancouver');
 insert into vehicle
-values('AAA128', 'Subaru', 'Mini', 2010, 'red', 10, 'compact', 'available', '654 Main St', 'Burnaby');
+values('AAA128', 'Subaru', 'Mini', 2010, 'red', 10, 'compact', 'available', 'Main St', 'Burnaby');
 insert into vehicle
-values('AAA129', 'Honda', 'Accord', 2000, 'silver', 10, 'standard', 'available', '654 Main St', 'Montreal');
+values('AAA129', 'Honda', 'Accord', 2000, 'silver', 10, 'standard', 'available', 'Main St', 'Montreal');
 insert into vehicle
-values('NFG325', 'Toyota', 'Corolla', 2009, 'silver', 10, 'standard', 'available', '654 Main St', 'Toronto');
+values('NFG325', 'Toyota', 'Corolla', 2009, 'silver', 10, 'standard', 'available', 'Main St', 'Toronto');
 insert into vehicle
-values('FHF324', 'Ford', 'Mustang', 2009, 'black', 10, 'standard', 'available', '654 Main St', 'Winnepeg');
+values('FHF324', 'Ford', 'Mustang', 2009, 'black', 10, 'standard', 'available', 'Main St', 'Winnepeg');
 insert into vehicle
-values('FDG523', 'Toyota', 'RAV4', 2010, 'white', 10, 'SUV', 'available', '654 Main St', 'Calgary');
+values('FDG523', 'Toyota', 'RAV4', 2010, 'white', 10, 'SUV', 'available', 'Main St', 'Calgary');
 insert into vehicle
-values('GFR325', 'Honda', 'Passport', 2015, 'red', 10, 'SUV', 'available', '654 Main St', 'Toronto');
+values('GFR325', 'Honda', 'Passport', 2015, 'red', 10, 'SUV', 'available', 'Main St', 'Toronto');
 insert into vehicle
-values('LSD352', 'Honda', 'Fit', 2014, 'blue', 10, 'SUV', 'available', '654 Main St', 'Calgary');
+values('LSD352', 'Honda', 'Fit', 2014, 'blue', 10, 'SUV', 'available', 'Main St', 'Calgary');
 insert into vehicle
-values('LFO350', 'Honda', 'Pilot', 2015, 'black', 10, 'truck', 'available', '654 Main St', 'Vancouver');
+values('LFO350', 'Honda', 'Pilot', 2015, 'black', 10, 'truck', 'available', 'Main St', 'Vancouver');
 insert into vehicle
-values('LGT333', 'Ford', 'Explorer', 2012, 'silver', 10, 'truck', 'available', '654 Main St', 'Burnaby');
+values('LGT333', 'Ford', 'Explorer', 2012, 'silver', 10, 'truck', 'available', 'Main St', 'Burnaby');
 insert into vehicle
-values('SDF168', 'Subaru', 'Forester', 2009, 'black', 10, 'truck', 'available', '654 Main St', 'Vancouver');
+values('SDF168', 'Subaru', 'Forester', 2009, 'black', 10, 'truck', 'available', 'Main St', 'Vancouver');
 insert into vehicle
-values('KGL954', 'Ford', 'Escape', 2012, 'blue', 10, 'economy', 'available', '654 Main St', 'Winnepeg');
+values('KGL954', 'Ford', 'Escape', 2012, 'blue', 10, 'economy', 'available', 'Main St', 'Winnepeg');
 insert into vehicle
-values('HGF453', 'Honda', 'Accord', 2014, 'red', 10, 'compact', 'available', '654 Main St', 'Montreal');
+values('HGF453', 'Honda', 'Accord', 2014, 'red', 10, 'compact', 'available', 'Main St', 'Montreal');
 insert into vehicle
-values('KHG056', 'Subaru', 'Outback', 2015, 'black', 10, 'standard', 'available', '654 Main St', 'Vancouver');
+values('KHG056', 'Subaru', 'Outback', 2015, 'black', 10, 'standard', 'available', 'Main St', 'Vancouver');
 insert into vehicle
-values('FHE532', 'Mazda', 'Point', 2009, 'white', 10, 'SUV', 'available', '654 Main St', 'Toronto');
+values('FHE532', 'Mazda', 'Point', 2009, 'white', 10, 'SUV', 'available', 'Main St', 'Toronto');
 insert into vehicle
-values('GFT325', 'Toyota', 'Tomato', 2015, 'white', 10, 'truck', 'available', '654 Main St', 'Burnaby');
+values('GFT325', 'Toyota', 'Tomato', 2015, 'white', 10, 'truck', 'available', 'Main St', 'Burnaby');

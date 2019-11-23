@@ -461,8 +461,7 @@ public class CarDatabaseHandler {
      */
 
     /**
-     * Generate Daily Rental Report
-     * to store report info ???
+     * Generate Daily Rental Report to store report info ???
      */
     public ArrayList<String[]> getDailyRentals() {
         ArrayList<String[]> report = new ArrayList<>();
@@ -472,24 +471,72 @@ public class CarDatabaseHandler {
             String todaysDate = getDate();
             System.out.println(todaysDate);
             PreparedStatement createView = connection.prepareStatement(
-                    "create or replace view dailyrent as select v.location, v.vtname from vehicle v, rentals r where r.rentFromDate = ? and v.vlicense = r.vlicense");
-            createView.setString(1, todaysDate);
-
+                    "create or replace view dailyrent as select v.location, v.vtname, r.rentFromDate from vehicle v, rentals r where v.vlicense = r.vlicense");
             ResultSet dailyRentView = createView.executeQuery();
-            connection.commit();
 
-            Statement getReport = connection.createStatement();
-            rs = getReport.executeQuery("select location, vtname, count(*) from dailyrent group by location, vtname");
+            PreparedStatement getReport = connection.prepareStatement(
+                    "select location, vtname, count(*) from dailyrent where rentFromDate = ? group by location, vtname");
+            getReport.setString(1, todaysDate);
+            rs = getReport.executeQuery();
 
             while (rs.next()) {
-                String[] reportRow = new String[] { rs.getString("location"),
-                        rs.getString("vtname"),
+                String[] reportRow = new String[] { rs.getString("location"), rs.getString("vtname"),
+                        Integer.toString(rs.getInt(3)) };
+                report.add(reportRow);
+            }
+
+            PreparedStatement getTotal = connection.prepareStatement("select count(*) FROM dailyrent where rentFromDate = ?");
+            getTotal.setString(1, todaysDate);
+            ResultSet total = getTotal.executeQuery();
+
+            if (total.next()) {
+                String[] reportTotal = new String[] { Integer.toString(total.getInt(1)) };
+                report.add(reportTotal);
+            }
+
+            createView.close();
+            dailyRentView.close();
+            rs.close();
+            total.close();
+            getReport.close();
+            getTotal.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            // throw new Exception("Something went wrong!!");
+        }
+        return report;
+    }
+
+    /**
+     * Generate Daily Rental Report by Branch TODO!!!!! TODO: need to construct
+     * another class to store report info ???
+     */
+    public ArrayList<String[]> getDailyRentalsByBranch(String location) {
+        ArrayList<String[]> report = new ArrayList<>();
+        ResultSet rs = null;
+
+        try {
+            String todaysDate = getDate();
+            System.out.println(todaysDate);
+            PreparedStatement createView = connection.prepareStatement(
+                    "create or replace view dailyrentbranch as select v.location, v.vtname from vehicle v, rentals r where r.rentFromDate = ? and v.vlicense = r.vlicense and v.location = ?");
+            createView.setString(1, todaysDate);
+            createView.setString(2, location);
+
+            ResultSet dailyRentView = createView.executeQuery();
+
+            Statement getReport = connection.createStatement();
+            rs = getReport
+                    .executeQuery("select location, vtname, count(*) from dailyrentbranch group by location, vtname");
+
+            while (rs.next()) {
+                String[] reportRow = new String[] { rs.getString("location"), rs.getString("vtname"),
                         Integer.toString(rs.getInt(3)) };
                 report.add(reportRow);
             }
 
             Statement getTotal = connection.createStatement();
-            ResultSet total = getTotal.executeQuery("select count(*) FROM dailyrent");
+            ResultSet total = getTotal.executeQuery("select count(*) FROM dailyrentbranch");
 
             if (total.next()) {
                 String[] reportTotal = new String[] { Integer.toString(total.getInt(1)) };
@@ -510,59 +557,100 @@ public class CarDatabaseHandler {
     }
 
     /**
-     * Generate Daily Rental Report by Branch TODO!!!!! TODO: need to construct
-     * another class to store report info ???
-     */
-    public ArrayList<String> getDailyRentalsByBranch() {
-        ResultSet rs = null;
-
-        try {
-            Statement stmt = connection.createStatement();
-            rs = stmt.executeQuery("stub");
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-        }
-        return null; // TODO need to save it locally
-    }
-
-    /**
      * Generate Daily Return Report TODO!!!!! TODO: need to construct another class
      * to store report info ???
      */
-    public ArrayList<String> getDailyReturns() {
+    public ArrayList<String[]> getDailyReturns() {
+        ArrayList<String[]> report = new ArrayList<>();
         ResultSet rs = null;
 
         try {
-            Statement stmt = connection.createStatement();
-            rs = stmt.executeQuery("stub");
+            String todaysDate = getDate();
+            System.out.println(todaysDate);
+            PreparedStatement createView = connection.prepareStatement(
+                    "create or replace view dailyreturn as select v.location, v.vtname, ret.value from vehicle v, rentals r, returns ret where ret.dateReturned = ? and v.vlicense = r.vlicense and r.rid = ret.rid");
+            createView.setString(1, todaysDate);
+
+            ResultSet dailyRentView = createView.executeQuery();
+
+            Statement getReport = connection.createStatement();
+            rs = getReport.executeQuery(
+                    "select location, vtname, count(*), sum(value) from dailyrentbranch group by location, vtname");
+
+            while (rs.next()) {
+                String[] reportRow = new String[] { rs.getString("location"), rs.getString("vtname"),
+                        Integer.toString(rs.getInt(3)), Integer.toString(4) };
+                report.add(reportRow);
+            }
+
+            Statement getTotal = connection.createStatement();
+            ResultSet total = getTotal.executeQuery("select count(*) FROM dailyrentbranch");
+
+            if (total.next()) {
+                String[] reportTotal = new String[] { Integer.toString(total.getInt(1)) };
+                report.add(reportTotal);
+            }
+
+            createView.close();
+            dailyRentView.close();
             rs.close();
-            stmt.close();
+            total.close();
+            getReport.close();
+            getTotal.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            throw new Error("Something went wrong!!");
         }
-        // stub
-        return null;
+        return report;
     }
 
     /**
      * Generate Daily Return Report by Branch TODO!!!!! TODO: need to construct
      * another class to store report info ???
      */
-    public ArrayList<String> getDailyReturnsByBranch() {
+    public ArrayList<String[]> getDailyReturnsByBranch(String location) {
+        ArrayList<String[]> report = new ArrayList<>();
         ResultSet rs = null;
 
         try {
-            Statement stmt = connection.createStatement();
-            rs = stmt.executeQuery("stub");
+            String todaysDate = getDate();
+            System.out.println(todaysDate);
+            PreparedStatement createView = connection.prepareStatement(
+                    "create or replace view dailyreturn as select v.location, v.vtname, ret.value from vehicle v, rentals r, returns ret where ret.dateReturned = ? and v.vlicense = r.vlicense and r.rid = ret.rid and v.location = ?");
+            createView.setString(1, todaysDate);
+            createView.setString(2, location);
+
+            ResultSet dailyRentView = createView.executeQuery();
+
+            Statement getReport = connection.createStatement();
+            rs = getReport.executeQuery(
+                    "select location, vtname, count(*), sum(value) from dailyrentbranch group by location, vtname");
+
+            while (rs.next()) {
+                String[] reportRow = new String[] { rs.getString("location"), rs.getString("vtname"),
+                        Integer.toString(rs.getInt(3)), Integer.toString(4) };
+                report.add(reportRow);
+            }
+
+            Statement getTotal = connection.createStatement();
+            ResultSet total = getTotal.executeQuery("select count(*) FROM dailyrentbranch");
+
+            if (total.next()) {
+                String[] reportTotal = new String[] { Integer.toString(total.getInt(1)) };
+                report.add(reportTotal);
+            }
+
+            createView.close();
+            dailyRentView.close();
             rs.close();
-            stmt.close();
+            total.close();
+            getReport.close();
+            getTotal.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            throw new Error("Something went wrong!!");
         }
-        // stub
-        return null; // TODO need to save it locally
+        return report;
     }
 
     /**
@@ -582,7 +670,7 @@ public class CarDatabaseHandler {
 
     private String getDate() {
         LocalDate date = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         return formatter.format(date);
     }
 
