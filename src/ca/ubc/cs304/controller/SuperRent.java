@@ -1,18 +1,24 @@
 package ca.ubc.cs304.controller;
 
 import ca.ubc.cs304.database.CarDatabaseHandler;
+import ca.ubc.cs304.model.Vehicles;
+import ca.ubc.cs304.ui.LoginWindow;
+import ca.ubc.cs304.ui.MainDisplay;
+import java.util.ArrayList;
+
+import ca.ubc.cs304.database.CarDatabaseHandler;
 import ca.ubc.cs304.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.delegates.LoginWindowDelegate;
 import ca.ubc.cs304.delegates.TerminalTransactionsDelegate;
+import ca.ubc.cs304.model.BranchModel;
 import ca.ubc.cs304.model.RentReceipt;
 import ca.ubc.cs304.model.Vehicles;
-import ca.ubc.cs304.model.BranchModel;
 import ca.ubc.cs304.ui.LoginWindow;
 import ca.ubc.cs304.ui.MainDisplay;
 import ca.ubc.cs304.ui.TerminalTransactions;
-
 import java.sql.Date;
 import java.util.ArrayList;
+
 
 /**
  * This is the main controller class that will orchestrate everything.
@@ -37,6 +43,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 	 * 
      * connects to Oracle database with supplied username and password
      */ 
+ @Override
 	public void login(String username, String password) {
 		boolean didConnect = carHandler.login(username, password);
 
@@ -60,6 +67,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 		}
 	}
 
+ @Override
 	public ArrayList<String[]> getAllVehicles(String vtname, String location) {
 		Vehicles[] vehicles = carHandler.getAllVehicles(vtname, location);
 		ArrayList<String[]> resultStr = new ArrayList<>();
@@ -74,18 +82,23 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         return resultStr;
 	}
 
+    @Override
     public String makeReservation( String name, String address, String dlicense,
                                    String vtname, String fromDate, String toDate) {
 	    // check if customer dlicense exists by calling database handler
-        // if not, add customer
+		// if not, add customer
+		System.out.println("initial reservation");
         if (! carHandler.dlicenseExistInCustomer(dlicense)) {
-            carHandler.addCustomer(name, address, dlicense);
+			carHandler.addCustomer(name, address, dlicense);
+			System.out.println("new customer");
         }
-        // make a reservation for them
+		// make a reservation for them
+		System.out.println("final");
         String str = carHandler.makeReservation(vtname, dlicense, fromDate, toDate);
 	    return str;
     }
 
+    @Override
     public String rentVehicle(String vtname, String location, String cardName,
                               Integer cardNo, String expDate, int confNo){
 //	    RentReceipt rentReceipt = carHandler.rentVehicle(vtname, location, cardName, cardNo, expDate, confNo);
@@ -160,6 +173,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
      * The TerminalTransaction instance tells us that it is done with what it's 
      * doing so we are cleaning up the connection since it's no longer needed.
      */ 
+    @Override
     public void terminalTransactionsFinished() {
     	carHandler.close();
     	carHandler = null;

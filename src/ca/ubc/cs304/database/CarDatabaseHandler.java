@@ -3,11 +3,11 @@ package ca.ubc.cs304.database;
 import ca.ubc.cs304.model.RentReceipt;
 import ca.ubc.cs304.model.Reservations;
 import ca.ubc.cs304.model.Vehicles;
-
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
 
 public class CarDatabaseHandler {
     private static final String ORACLE_URL = "jdbc:oracle:thin:@dbhost.students.cs.ubc.ca:1522:stu";
@@ -120,8 +120,11 @@ public class CarDatabaseHandler {
             if (!dlicense.equals("")) {
                 PreparedStatement ps = connection.prepareStatement("SELECT * FROM customer WHERE dlicense = ? ");
                 ps.setString(1, dlicense);
+                System.out.println("ps " + ps);
                 rs = ps.executeQuery();
-                ret = !rs.wasNull();
+                System.out.println("rs " + rs);
+                ret = rs.next();
+                System.out.println("ret= " + ret);
                 rs.close();
                 ps.close();
             } else {
@@ -202,25 +205,31 @@ public class CarDatabaseHandler {
 
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO reservations VALUES (reserveConfNo.nextval,?,?,?,?)");
-            ps.setString(2, vtname);
-            ps.setString(3, dlicense);
-            ps.setString(4, fromDate);
+            ps.setString(1, vtname);
+            ps.setString(2, dlicense);
+            ps.setString(3, fromDate);
             //ps.setTime(5, fromTime);
-            ps.setString(5, toDate);
+            ps.setString(4, toDate);
             //ps.setTime(6, toTime);
+
+            System.out.println("reservation query= " + ps);
 
             ps.executeUpdate();
             connection.commit();
 
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT confNo FROM reservations WHERE confNo = reserveConfNo.currval");
-            result = Integer.toString(rs.getInt("confNo")); // the confNo to return
+            System.out.println("sequence check 1");
 
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT confNo FROM reservations WHERE confNo = (SELECT max(confNo) FROM reservations)");
+            //rs.next();
+            System.out.println(rs.next());
+            result = Integer.toString(rs.getInt("confNo")); // the confNo to return
+            System.out.println(result);
             ps.close();
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            result = "Vehicle type does not exist.";
+            result = "ERROR: " + e.getMessage();
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
         }
