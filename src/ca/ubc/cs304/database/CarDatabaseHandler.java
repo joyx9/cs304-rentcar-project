@@ -76,7 +76,7 @@ public class CarDatabaseHandler {
                 ps.close();
             } else {
                 ret = false;
-            }
+            }y
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
@@ -393,12 +393,10 @@ public class CarDatabaseHandler {
         ArrayList<String> returnRecipt = new ArrayList<>();
 
         try {
-            //if rid does not exist return empty string
             if (!ridExist(rid)){
                 returnRecipt.add("Sorry this rental id does not exist.");
             } else {
 
-                Integer totalCost = -1;
                 PreparedStatement ps = connection.prepareStatement("INSERT INTO returns VALUES (?,?,?,?)");
                 ps.setInt(1, rid);
                 ps.setString(2, returnDate);
@@ -407,41 +405,18 @@ public class CarDatabaseHandler {
 
                 ps.executeUpdate();
                 connection.commit();
-
-                PreparedStatement cs = connection.prepareStatement("SELECT odometer FROM rentals" +
-                        "WHERE rid = ?");
-                cs.setInt(1, rid);
-                ResultSet rs = cs.executeQuery();
-
-//
-//
-//                Statement stmt = connection.createStatement(); //TODO
-//                ResultSet rs = stmt.executeQuery("SELECT confNo FROM reservations WHERE confNo = reserveConfNo.currval");
-//                result = Integer.toString(rs.getInt("confNo")); // the confNo to return
-
                 ps.close();
-                rs.close();
-                //stmt.close();
 
-
-
-
-
-
-
-
-
+                // return array: [rid, returnDate, totalCost]
+                returnRecipt.add(Integer.toString(rid));
+                returnRecipt.add(returnDate);
+                returnRecipt.add(Integer.toString(180));
 
             }
-
-
-                //need to return confNo, rental lasts for can just be fromDate and toDate
-                //return vtname, location <- this comes from the vehicle relation....using rentals foreign key vlicense
 
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
-
 
         return returnRecipt;
     }
