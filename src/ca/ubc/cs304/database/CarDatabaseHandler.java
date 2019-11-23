@@ -377,6 +377,7 @@ public class CarDatabaseHandler {
             stmt.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rentReceipt = "Ooops... Somthing Wrong happened.";
         }
 
         return rentReceipt;
@@ -418,7 +419,9 @@ public class CarDatabaseHandler {
             }
 
         } catch (SQLException e) {
+
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            returnRecipt = ("Sorry there is an error occurred please contact help desk.");
         }
 
         return returnRecipt;
