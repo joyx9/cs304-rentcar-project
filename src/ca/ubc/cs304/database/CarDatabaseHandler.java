@@ -205,12 +205,8 @@ public class CarDatabaseHandler {
             ps.setString(4, toDate);
             // ps.setTime(6, toTime);
 
-            System.out.println("reservation query= " + ps);
-
             ps.executeUpdate();
             connection.commit();
-
-            System.out.println("sequence check 1");
 
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(
@@ -224,7 +220,7 @@ public class CarDatabaseHandler {
             stmt.close();
         } catch (SQLException e) {
             if (e.getMessage().contains("ORA-02291")) {
-                result = "ERROR: the car type does not exist";
+                result = "ERROR: your desired car type is not available";
             } else {
                 result = "ERROR: your inputs are invalid";
             }
@@ -588,7 +584,7 @@ public class CarDatabaseHandler {
             ResultSet total = getTotal.executeQuery();
 
             if (total.next()) {
-                String[] reportTotal = new String[] { Integer.toString(total.getInt(1)) };
+                String[] reportTotal = new String[] { "$" + Integer.toString(total.getInt(1)) };
                 report.add(reportTotal);
             }
 
@@ -638,7 +634,7 @@ public class CarDatabaseHandler {
             ResultSet total = getTotal.executeQuery();
 
             if (total.next()) {
-                String[] reportTotal = new String[] { Integer.toString(total.getInt(1)) };
+                String[] reportTotal = new String[] { "$" + Integer.toString(total.getInt(1)) };
                 report.add(reportTotal);
             }
 
