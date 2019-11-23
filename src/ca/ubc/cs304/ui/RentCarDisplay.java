@@ -25,6 +25,8 @@ public class RentCarDisplay extends JFrame implements ActionListener {
     private JTextField cardNotf;
     private JTextField expDatetf;
     private JTextField cardNametf;
+    private JTextField fromDatetf;
+    private JTextField toDatetf;
     private JButton backButton;
     private JButton confirmButton;
 
@@ -155,6 +157,42 @@ public class RentCarDisplay extends JFrame implements ActionListener {
             gbc.gridy = 6;
             frame.getContentPane().add(cardNametf, gbc);
 
+            // add fromdate
+            JLabel lfromdate = new JLabel();
+            lfromdate.setText("Start date (YYYY/MM/DD):");
+            lfromdate.setFont(defaultFont);
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.gridx = 0;
+            gbc.gridy = 7;
+            frame.getContentPane().add(lfromdate, gbc);
+
+            fromDatetf = new JTextField(20);
+            fromDatetf.setFont(defaultFont);
+            fromDatetf.setMinimumSize(new Dimension(30, 10));
+            fromDatetf.setText("");
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.gridx = 1;
+            gbc.gridy = 7;
+            frame.getContentPane().add(fromDatetf, gbc);
+
+            // add todate
+            JLabel ltodate = new JLabel();
+            ltodate.setText("End date (YYYY/MM/DD):");
+            ltodate.setFont(defaultFont);
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.gridx = 0;
+            gbc.gridy = 8;
+            frame.getContentPane().add(ltodate, gbc);
+
+            toDatetf = new JTextField(20);
+            toDatetf.setFont(defaultFont);
+            toDatetf.setMinimumSize(new Dimension(30, 10));
+            toDatetf.setText("");
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.gridx = 1;
+            gbc.gridy = 8;
+            frame.getContentPane().add(toDatetf, gbc);
+
             // adds "confirm rental" button
             confirmButton = new JButton("Confirm Rental");
             confirmButton.setFont(defaultFont);
@@ -209,10 +247,12 @@ public class RentCarDisplay extends JFrame implements ActionListener {
             try {
                 cardno = parseInt(cardNotf.getText());
                 confnum = parseInt(conftf.getText());
-                String str = delegate.rentVehicle(cardNametf.getText(), cardno, expDatetf.getText(),confnum);
+                String str = delegate.rentVehicle(cardNametf.getText(), cardno, expDatetf.getText(),confnum,
+                        fromDatetf.getText(), toDatetf.getText());
                 this.displayReceipt(str);
             }catch(Exception excep){
-                String str = "Error: please enter valid card information / confirmation number";
+                String str = "Error: invalid information. please try again";
+                this.displayReceipt(str);
             }
         }
     }
