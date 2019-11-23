@@ -70,7 +70,6 @@ create table rentals
 create table returns
 	(rid int not null,
 	dateReturned varchar(40) not null,
-	timeReturned varchar(40) not null,
 	odometer varchar(40) not null,
 	fulltank char(1),
 	value varchar(40) not null,
