@@ -34,7 +34,7 @@ public class GenerateReportTable extends JFrame{
         gbc = new GridBagConstraints();
 
         // headers for the table
-        int colCount = repStr.get(1).length;
+        int colCount = repStr.get(0).length;
         String[] columns = new String[] {};
         Object[][] data = new Object[][] {};
         // create table with data
