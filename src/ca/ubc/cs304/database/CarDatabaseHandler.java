@@ -76,7 +76,7 @@ public class CarDatabaseHandler {
                 ps.close();
             } else {
                 ret = false;
-            }y
+            }
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
@@ -318,8 +318,8 @@ public class CarDatabaseHandler {
     //     return result;
     // }
 
-    public ArrayList<String> rentVehicle(String cardName, Integer cardNo, String expDate, int confNo) {
-        ArrayList<String> rentReceipt = new ArrayList<>();
+    public String rentVehicle(String cardName, Integer cardNo, String expDate, int confNo) {
+        String rentReceipt = "";
         ResultSet rs = null;
 
         try {
@@ -352,13 +352,13 @@ public class CarDatabaseHandler {
 
                 rs = stmt.executeQuery("SELECT confNo, vtname, location, rentFromDate, rentToDate FROM rentals WHERE rid = rentID.currval");
                 
-                while(rs.next()) {
-                    rentReceipt.add(Integer.toString(rs.getInt("confNo")));
-                    rentReceipt.add(rs.getString("vtname"));
-                    rentReceipt.add(rs.getString("location"));
-                    rentReceipt.add(rs.getString("rentFromDate"));
-                    rentReceipt.add(rs.getString("rentToDate"));
-                }
+                //while(rs.next()) {
+                    rentReceipt = ("Your rental confirmaton number is: "+ Integer.toString(rs.getInt("confNo"))
+                    + "\n Customer name: " + (rs.getString("vtname"))
+                    +"\n Rental location: " + (rs.getString("location"))
+                    +"\n Starting Date : " + (rs.getString("rentFromDate"))
+                            + "\n End Date: "+ (rs.getString("rentToDate")));
+                //}
                 
                 getReservation.close();
                 getVehicles.close();
@@ -388,12 +388,12 @@ public class CarDatabaseHandler {
      *  Clerk enters:date, the time, the odometer reading, and  gas tank is full?
      * //TODO ->> LOOK AT ME  the totalcost is a make up number !!!!!!
      */
-    public ArrayList<String> returnVehicle(int rid, String returnDate, int odometer, String gasTankFull){
-        ArrayList<String> returnRecipt = new ArrayList<>();
+    public String returnVehicle(int rid, String returnDate, int odometer, String gasTankFull){
+        String returnRecipt = "";
 
         try {
             if (!ridExist(rid)){
-                returnRecipt.add("Sorry this rental id does not exist.");
+                returnRecipt = ("Sorry this rental id does not exist.");
             } else {
 
                 PreparedStatement ps = connection.prepareStatement("INSERT INTO returns VALUES (?,?,?,?,?)");
@@ -408,9 +408,9 @@ public class CarDatabaseHandler {
                 ps.close();
 
                 // return array: [rid, returnDate, totalCost]
-                returnRecipt.add(Integer.toString(rid));
-                returnRecipt.add(returnDate);
-                returnRecipt.add("180");
+                returnRecipt= ("Your return Id is: "+ Integer.toString(rid) +
+            "\nReturn Date: "+ returnDate + "\nYour total cost is: 180 ");
+
 
             }
 
@@ -445,6 +445,81 @@ public class CarDatabaseHandler {
         }
         return rs; //TODO need to save it locally
     }
+
+
+    /**
+     * Generate Daily Rental Report by Branch
+     * TODO!!!!!
+     * TODO: need to construct another class to store report info ???
+     */
+    public ArrayList<String> getDailyRentalsByBranch() {
+        ResultSet rs = null;
+
+        try {
+            Statement stmt = connection.createStatement();
+            rs = stmt.executeQuery("stub");
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+        return null; //TODO need to save it locally
+    }
+
+
+    /**
+     * Generate Daily Return Report
+     * TODO!!!!!
+     * TODO: need to construct another class to store report info ???
+     */
+    public ArrayList<String> getDailyReturns() {
+        ResultSet rs = null;
+
+        try {
+            Statement stmt = connection.createStatement();
+            rs = stmt.executeQuery("stub");
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+        // stub
+        return null;
+    }
+
+
+
+
+    /**
+     * Generate Daily Return Report by Branch
+     * TODO!!!!!
+     * TODO: need to construct another class to store report info ???
+     */
+    public ArrayList<String> getDailyReturnsByBranch() {
+        ResultSet rs = null;
+
+        try {
+            Statement stmt = connection.createStatement();
+            rs = stmt.executeQuery("stub");
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+        //stub
+        return null; //TODO need to save it locally
+    }
+
+
+
+
+
+
+
+
+    /**
+     * Weird Stuff Ignore ================================================
+     */
 
     public boolean login(String username, String password) {
 		try {
