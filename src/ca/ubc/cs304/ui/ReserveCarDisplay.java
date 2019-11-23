@@ -1,6 +1,8 @@
 
 package ca.ubc.cs304.ui;
 
+import ca.ubc.cs304.delegates.TerminalTransactionsDelegate;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,6 +21,7 @@ public class ReserveCarDisplay extends JFrame implements ActionListener {
     private JLabel label;
     private JButton button;
     private MainDisplay mainDisplay;
+    private TerminalTransactionsDelegate delegate;
     private JTextField carTypetf;
     private JTextField licencetf;
     private JTextField locationtf;
@@ -27,11 +30,12 @@ public class ReserveCarDisplay extends JFrame implements ActionListener {
     private JTextField nametf;
     private JTextField addresstf;
 
-    ReserveCarDisplay(MainDisplay md){
+    ReserveCarDisplay(MainDisplay md, TerminalTransactionsDelegate del){
         frame = new JFrame();
         frame.setSize(width, height);
         frame.setTitle("Rent-A-Car");
         mainDisplay = md;
+        delegate = del;
         setupDisplay(frame.getContentPane());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -191,9 +195,9 @@ public class ReserveCarDisplay extends JFrame implements ActionListener {
         pane.add(button, gbc);
     }
 
-    private void displayConfNum(int num){
+    private void displayConfNum(String s){
         // adds confirmation number text field
-        JLabel conf = new JLabel("Your Confirmation Number:" + num);
+        JLabel conf = new JLabel("Your Confirmation Number:" + s);
         conf.setFont(defaultFont);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
@@ -209,9 +213,10 @@ public class ReserveCarDisplay extends JFrame implements ActionListener {
             mainDisplay.returnFromDisplay();
             frame.setVisible(false);
         } else if (e.getActionCommand() == "confirmPressed"){
-            // todo get the confirmation number!
-            int num = -1;
-            this.displayConfNum(num);
+            String s = delegate.makeReservation(nametf.getText(), addresstf.getText(),
+                    licencetf.getText(), carTypetf.getText(), fromDatetf.getText(), toDatetf.getText());
+            // String s = "-1";
+            this.displayConfNum(s);
         }
     }
 }

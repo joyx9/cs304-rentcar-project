@@ -195,7 +195,7 @@ public class ViewVehiclesDisplay extends JFrame implements ActionListener {
                         new Insets(5, 5, 5, 5), 0, 0));
         frame.revalidate();
         frame.repaint();
-        //        report = new JTextArea();
+//        report = new JTextArea();
 //        report.setFont(defaultFont);
 //        report.setLineWrap(true);
 //        report.setWrapStyleWord(true);

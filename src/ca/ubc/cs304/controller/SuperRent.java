@@ -74,17 +74,25 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         return resultStr;
 	}
 
-    public String makeReservation(String vtname, String dlicense, String fromDate, String toDate) {
-	    return null;
+    public String makeReservation( String name, String address, String dlicense,
+                                   String vtname, String fromDate, String toDate) {
+	    // check if customer dlicense exists by calling database handler
+        // if not, add customer
+        if (! carHandler.dlicenseExistInCustomer(dlicense)) {
+            carHandler.addCustomer(name, address, dlicense);
+        }
+        // make a reservation for them
+        String str = carHandler.makeReservation(vtname, dlicense, fromDate, toDate);
+	    return str;
     }
 
     public String rentVehicle(String vtname, String location, String cardName,
                               Integer cardNo, String expDate, int confNo){
-	    RentReceipt rentReceipt = carHandler.rentVehicle(vtname, location, cardName, cardNo, expDate, confNo);
-	    String str = "Confirmation Number: " + rentReceipt.getConfNo() + " Date Rented: " + rentReceipt.getResDate() +
-                " Location: " + rentReceipt.getLocation() + " Vehicle: " + rentReceipt.getVtname();
-
-	    str += "   Thank you for renting from SuperRent!";
+//	    RentReceipt rentReceipt = carHandler.rentVehicle(vtname, location, cardName, cardNo, expDate, confNo);
+//	    String str = "Confirmation Number: " + rentReceipt.getConfNo() + " Date Rented: " + rentReceipt.getResDate() +
+//                " Location: " + rentReceipt.getLocation() + " Vehicle: " + rentReceipt.getVtname();
+        // todo this is a stub!
+	    String str = "   Thank you for renting from SuperRent!";
 	    return str;
     }
 	
