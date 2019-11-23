@@ -519,15 +519,14 @@ public class CarDatabaseHandler {
             String todaysDate = getDate();
             System.out.println(todaysDate);
             PreparedStatement createView = connection.prepareStatement(
-                    "create or replace view dailyrentbranch as select v.location, v.vtname from vehicle v, rentals r where r.rentFromDate = ? and v.vlicense = r.vlicense and v.location = ?");
-            createView.setString(1, todaysDate);
-            createView.setString(2, location);
-
+                    "create or replace view dailyrent as select v.location, v.vtname, r.rentFromDate from vehicle v, rentals r where v.vlicense = r.vlicense");
             ResultSet dailyRentView = createView.executeQuery();
 
-            Statement getReport = connection.createStatement();
-            rs = getReport
-                    .executeQuery("select location, vtname, count(*) from dailyrentbranch group by location, vtname");
+            PreparedStatement getReport = connection.prepareStatement(
+                    "select location, vtname, count(*) from dailyrent where rentFromDate = ? and location = ? group by location, vtname");
+            getReport.setString(1, todaysDate);
+            getReport.setString(2, location);
+            rs = getReport.executeQuery();
 
             while (rs.next()) {
                 String[] reportRow = new String[] { rs.getString("location"), rs.getString("vtname"),
@@ -535,8 +534,10 @@ public class CarDatabaseHandler {
                 report.add(reportRow);
             }
 
-            Statement getTotal = connection.createStatement();
-            ResultSet total = getTotal.executeQuery("select count(*) FROM dailyrentbranch");
+            PreparedStatement getTotal = connection.prepareStatement("select count(*) FROM dailyrent where rentFromDate = ? and location = ?");
+            getTotal.setString(1, todaysDate);
+            getTotal.setString(2, location);
+            ResultSet total = getTotal.executeQuery();
 
             if (total.next()) {
                 String[] reportTotal = new String[] { Integer.toString(total.getInt(1)) };
@@ -551,7 +552,7 @@ public class CarDatabaseHandler {
             getTotal.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-            throw new Error("Something went wrong!!");
+            // throw new Exception("Something went wrong!!");
         }
         return report;
     }
@@ -568,23 +569,23 @@ public class CarDatabaseHandler {
             String todaysDate = getDate();
             System.out.println(todaysDate);
             PreparedStatement createView = connection.prepareStatement(
-                    "create or replace view dailyreturn as select v.location, v.vtname, ret.value from vehicle v, rentals r, returns ret where ret.dateReturned = ? and v.vlicense = r.vlicense and r.rid = ret.rid");
-            createView.setString(1, todaysDate);
+                    "create or replace view dailyreturn as select v.location, v.vtname, ret.dateReturned, ret.value from vehicle v, rentals r, returns ret where v.vlicense = r.vlicense and r.rid = ret.rid");
 
-            ResultSet dailyRentView = createView.executeQuery();
+            ResultSet dailyReturnView = createView.executeQuery();
 
-            Statement getReport = connection.createStatement();
-            rs = getReport.executeQuery(
-                    "select location, vtname, count(*), sum(value) from dailyrentbranch group by location, vtname");
+            PreparedStatement getReport = connection.prepareStatement( "select location, vtname, count(*), sum(value) from dailyreturn where dateReturned = ? group by location, vtname");
+            getReport.setString(1, todaysDate);
+            rs = getReport.executeQuery();
 
             while (rs.next()) {
                 String[] reportRow = new String[] { rs.getString("location"), rs.getString("vtname"),
-                        Integer.toString(rs.getInt(3)), Integer.toString(4) };
+                        Integer.toString(rs.getInt(3)), Integer.toString(rs.getInt(4)) };
                 report.add(reportRow);
             }
 
-            Statement getTotal = connection.createStatement();
-            ResultSet total = getTotal.executeQuery("select count(*) FROM dailyrentbranch");
+            PreparedStatement getTotal = connection.prepareStatement("select count(*) FROM dailyreturn where dateReturned = ?");
+            getTotal.setString(1, todaysDate);
+            ResultSet total = getTotal.executeQuery();
 
             if (total.next()) {
                 String[] reportTotal = new String[] { Integer.toString(total.getInt(1)) };
@@ -592,7 +593,7 @@ public class CarDatabaseHandler {
             }
 
             createView.close();
-            dailyRentView.close();
+            dailyReturnView.close();
             rs.close();
             total.close();
             getReport.close();
@@ -616,24 +617,25 @@ public class CarDatabaseHandler {
             String todaysDate = getDate();
             System.out.println(todaysDate);
             PreparedStatement createView = connection.prepareStatement(
-                    "create or replace view dailyreturn as select v.location, v.vtname, ret.value from vehicle v, rentals r, returns ret where ret.dateReturned = ? and v.vlicense = r.vlicense and r.rid = ret.rid and v.location = ?");
-            createView.setString(1, todaysDate);
-            createView.setString(2, location);
+                    "create or replace view dailyreturn as select v.location, v.vtname, ret.dateReturned, ret.value from vehicle v, rentals r, returns ret where v.vlicense = r.vlicense and r.rid = ret.rid");
 
-            ResultSet dailyRentView = createView.executeQuery();
+            ResultSet dailyReturnView = createView.executeQuery();
 
-            Statement getReport = connection.createStatement();
-            rs = getReport.executeQuery(
-                    "select location, vtname, count(*), sum(value) from dailyrentbranch group by location, vtname");
+            PreparedStatement getReport = connection.prepareStatement( "select location, vtname, count(*), sum(value) from dailyreturn where dateReturned = ? and location = ? group by location, vtname");
+            getReport.setString(1, todaysDate);
+            getReport.setString(2, location);
+            rs = getReport.executeQuery();
 
             while (rs.next()) {
                 String[] reportRow = new String[] { rs.getString("location"), rs.getString("vtname"),
-                        Integer.toString(rs.getInt(3)), Integer.toString(4) };
+                        Integer.toString(rs.getInt(3)), Integer.toString(rs.getInt(4)) };
                 report.add(reportRow);
             }
 
-            Statement getTotal = connection.createStatement();
-            ResultSet total = getTotal.executeQuery("select count(*) FROM dailyrentbranch");
+            PreparedStatement getTotal = connection.prepareStatement("select count(*) FROM dailyreturn where dateReturned = ? and location = ?");
+            getTotal.setString(1, todaysDate);
+            getTotal.setString(2, location);
+            ResultSet total = getTotal.executeQuery();
 
             if (total.next()) {
                 String[] reportTotal = new String[] { Integer.toString(total.getInt(1)) };
@@ -641,7 +643,7 @@ public class CarDatabaseHandler {
             }
 
             createView.close();
-            dailyRentView.close();
+            dailyReturnView.close();
             rs.close();
             total.close();
             getReport.close();
