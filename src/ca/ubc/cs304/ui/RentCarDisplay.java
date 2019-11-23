@@ -236,11 +236,9 @@ public class RentCarDisplay extends JFrame implements ActionListener {
             mainDisplay.returnFromDisplay();
             frame.setVisible(false);
         } else if (e.getActionCommand() == "nextPressed"){
-            // todo check if they have a reservation !!! Again, I need the backend to work lol
             boolean hasReservation = true;
             this.displayNext(hasReservation);
         } else if (e.getActionCommand() == "confirmPressed"){
-            // todo get receipt
             int cardno;
             int confnum;
             //String str = "Receipt!!!!!!!!!!!!!!!!!!!";

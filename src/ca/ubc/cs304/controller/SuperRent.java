@@ -101,7 +101,6 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     @Override
     public String rentVehicle(String cardName, Integer cardNo, String expDate, int confNo, String fromDate, String toDate){
         String str = carHandler.rentVehicle(cardName, cardNo, expDate, confNo, fromDate, toDate);
-        // todo this is a stub!
 	    str += ".      Thank you for renting from SuperRent!";
 	    return str;
     }
@@ -109,6 +108,11 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     @Override
     public boolean reservationExists(int confNo){
         return carHandler.confNoExist(confNo);
+    }
+
+    @Override
+    public String returnVehicle (int rid, String returnDate, int odometer, String gasTankFull){
+        return carHandler.returnVehicle(rid, returnDate, odometer, gasTankFull);
     }
 	// /**
 	//  * TermainalTransactionsDelegate Implementation

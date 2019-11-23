@@ -1,11 +1,14 @@
 package ca.ubc.cs304.ui;
 
+import ca.ubc.cs304.delegates.TerminalTransactionsDelegate;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import static java.awt.GridBagConstraints.RELATIVE;
+import static java.lang.Integer.parseInt;
 
 public class ReturnCarDisplay extends JFrame implements ActionListener {
 
@@ -17,6 +20,7 @@ public class ReturnCarDisplay extends JFrame implements ActionListener {
     private JLabel label;
     private JButton button;
     private MainDisplay mainDisplay;
+    private TerminalTransactionsDelegate delegate;
     private JTextField datetf;
     private JTextField odomtf;
     private JTextField tanktf;
@@ -24,11 +28,12 @@ public class ReturnCarDisplay extends JFrame implements ActionListener {
     private JButton backButton;
 
 
-    ReturnCarDisplay(MainDisplay md){
+    ReturnCarDisplay(MainDisplay md, TerminalTransactionsDelegate del){
         frame = new JFrame();
         frame.setSize(width, height);
         frame.setTitle("Rent-A-Car");
         mainDisplay = md;
+        delegate = del;
         setupDisplay(frame.getContentPane());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -161,8 +166,15 @@ public class ReturnCarDisplay extends JFrame implements ActionListener {
             frame.setVisible(false);
         } else if (e.getActionCommand() == "confirmPressed"){
             //todo get receipt info or return error if rid is not in rentals
-            String str = "Receipt!!!!!!!!!!!!!!!!!!!";
-            this.displayReceipt(str);
+            try {
+                String str = delegate.returnVehicle(parseInt(ridtf.getText()),datetf.getText(),
+                        parseInt(odomtf.getText()), tanktf.getText());
+                this.displayReceipt(str);
+            }
+            catch (Exception exc) {
+                String str = "ERROR: something went wrong. Please check your inputs and try again";
+                this.displayReceipt(str);
+            }
         }
     }
 }
