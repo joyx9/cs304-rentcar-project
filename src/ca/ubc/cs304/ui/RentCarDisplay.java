@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import static java.awt.GridBagConstraints.RELATIVE;
+import static java.lang.Integer.parseInt;
 
 public class RentCarDisplay extends JFrame implements ActionListener {
 
@@ -202,12 +203,17 @@ public class RentCarDisplay extends JFrame implements ActionListener {
             this.displayNext(hasReservation);
         } else if (e.getActionCommand() == "confirmPressed"){
             // todo get receipt
-            String str = "Receipt!!!!!!!!!!!!!!!!!!!";
-        // String str = delegate.rentVehicle(vtname, location, cardName, cardNo, expDate, confNo);
-            // we need to use this line below. it doesn't work until delegate changes though lol
-//            String str = delegate.rentVehicle(cardNametf.getText(), cardNotf.getText(),
-//                    expDatetf.getText(), conftf.getText());
-            this.displayReceipt(str);
+            int cardno;
+            int confnum;
+            //String str = "Receipt!!!!!!!!!!!!!!!!!!!";
+            try {
+                cardno = parseInt(cardNotf.getText());
+                confnum = parseInt(conftf.getText());
+                String str = delegate.rentVehicle(cardNametf.getText(), cardno, expDatetf.getText(),confnum);
+                this.displayReceipt(str);
+            }catch(Exception excep){
+                String str = "Error: please enter valid card information / confirmation number";
+            }
         }
     }
 }

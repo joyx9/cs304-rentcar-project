@@ -99,16 +99,17 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     }
 
     @Override
-    public String rentVehicle(String vtname, String location, String cardName,
-                              Integer cardNo, String expDate, int confNo){
-//	    RentReceipt rentReceipt = carHandler.rentVehicle(vtname, location, cardName, cardNo, expDate, confNo);
-//	    String str = "Confirmation Number: " + rentReceipt.getConfNo() + " Date Rented: " + rentReceipt.getResDate() +
-//                " Location: " + rentReceipt.getLocation() + " Vehicle: " + rentReceipt.getVtname();
+    public String rentVehicle(String cardName, Integer cardNo, String expDate, int confNo){
+        String str = carHandler.rentVehicle(cardName, cardNo, expDate, confNo);
         // todo this is a stub!
-	    String str = "   Thank you for renting from SuperRent!";
+	    str += ".      Thank you for renting from SuperRent!";
 	    return str;
     }
-	
+
+    @Override
+    public boolean reservationExists(int confNo){
+        return carHandler.confNoExist(confNo);
+    }
 	// /**
 	//  * TermainalTransactionsDelegate Implementation
 	//  * 

@@ -17,12 +17,7 @@ public interface TerminalTransactionsDelegate {
 	public ArrayList<String[]> getAllVehicles(String vtname, String location);
 	public String makeReservation(String name, String address, String dlicense,
                                   String vtname, String fromDate, String toDate);
-	public String rentVehicle(String vtname, String location, String cardName,
-                              Integer cardNo, String expDate, int confNo);
-	// public void deleteBranch(int branchId);
-	// public void insertBranch(BranchModel model);
-	// public void showBranch();
-	// public void updateBranch(int branchId, String name);
-	
+	public String rentVehicle(String cardName, Integer cardNo, String expDate, int confNo);
+	public boolean reservationExists(int confno);
 	public void terminalTransactionsFinished();
 }
