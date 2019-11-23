@@ -226,6 +226,34 @@ public class CarDatabaseHandler {
 
     }
 
+    /**
+     * add a new Customer to SQL
+     * Inputs: name,addr,delicense
+     * Output a confNo for the customer
+     */
+    public void addCustomer(String name, String address, String dlicense){
+
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO customer VALUES (?,?,?)");
+            ps.setString(1, name);
+            ps.setString(2, address);
+            ps.setString(3, dlicense);
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+
+
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+
+
+
+    }
+
 
     /**
      * Renting a vehicle
