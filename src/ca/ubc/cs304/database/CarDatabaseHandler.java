@@ -251,7 +251,6 @@ public class CarDatabaseHandler {
         }
 
 
-
     }
 
 
@@ -387,7 +386,7 @@ public class CarDatabaseHandler {
      *  (e.g., reservation confirmation number, date of return, how the total was calculated etc.)
      *  if the vehicle is not rented throw error message
      *  Clerk enters:date, the time, the odometer reading, and  gas tank is full?
-     * //TODO TODO TODO TODO TODO LOOK AT ME NOT DONE YET TODO TODO TODO TODO TODO
+     * //TODO ->> LOOK AT ME  the totalcost is a make up number !!!!!!
      */
     public ArrayList<String> returnVehicle(int rid, String returnDate, int odometer, String gasTankFull){
         ArrayList<String> returnRecipt = new ArrayList<>();
@@ -397,11 +396,12 @@ public class CarDatabaseHandler {
                 returnRecipt.add("Sorry this rental id does not exist.");
             } else {
 
-                PreparedStatement ps = connection.prepareStatement("INSERT INTO returns VALUES (?,?,?,?)");
+                PreparedStatement ps = connection.prepareStatement("INSERT INTO returns VALUES (?,?,?,?,?)");
                 ps.setInt(1, rid);
                 ps.setString(2, returnDate);
                 ps.setInt(3, odometer);
                 ps.setString(4, gasTankFull);
+                ps.setInt(5, 180);
 
                 ps.executeUpdate();
                 connection.commit();
@@ -410,7 +410,7 @@ public class CarDatabaseHandler {
                 // return array: [rid, returnDate, totalCost]
                 returnRecipt.add(Integer.toString(rid));
                 returnRecipt.add(returnDate);
-                returnRecipt.add(Integer.toString(180));
+                returnRecipt.add("180");
 
             }
 
