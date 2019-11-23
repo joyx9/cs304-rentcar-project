@@ -510,9 +510,18 @@ public class CarDatabaseHandler {
         return null; //TODO need to save it locally
     }
 
+/**
+ * Get current date as a STRING METHOD  ================================================
+ */
 
-
-
+//    private String getDateTime() {
+//
+//        DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+//
+//        Date date = new Date();
+//
+//        return dateFormat.format(date);
+//    }
 
 
 
