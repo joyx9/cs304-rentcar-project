@@ -120,11 +120,8 @@ public class CarDatabaseHandler {
             if (!dlicense.equals("")) {
                 PreparedStatement ps = connection.prepareStatement("SELECT * FROM customer WHERE dlicense = ? ");
                 ps.setString(1, dlicense);
-                System.out.println("ps " + ps);
                 rs = ps.executeQuery();
-                System.out.println("rs " + rs);
                 ret = rs.next();
-                System.out.println("ret= " + ret);
                 rs.close();
                 ps.close();
             } else {
@@ -229,7 +226,12 @@ public class CarDatabaseHandler {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            result = "ERROR: " + e.getMessage();
+            if (e.getMessage().contains("ORA-02291")) {
+                result = "ERROR: the car type does not exist";
+            }
+            else {
+                result = "ERROR: your inputs are invalid";
+            }
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
         }
