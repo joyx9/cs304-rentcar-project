@@ -83,6 +83,54 @@ public class CarDatabaseHandler {
         return ret;
     }
 
+    /**
+     * Check if the dlicense exists in reservations
+     */
+    public boolean dlicenseExistInResv(String dlicense){
+        ResultSet rs;
+        boolean ret = false;
+
+        try {
+            if (dlicense.equals("") ) {
+                PreparedStatement ps = connection.prepareStatement("SELECT * FROM reservations WHERE dlicense = ? ");
+                ps.setString(1, dlicense);
+                rs = ps.executeQuery();
+                ret = rs.wasNull();
+                rs.close();
+                ps.close();
+            } else {
+                ret = false;
+            }
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+        return ret;
+    }
+
+    /**
+     * Check if the dlicense exists in reservations
+     */
+    public boolean dlicenseExistInCustomer(String dlicense){
+        ResultSet rs;
+        boolean ret = false;
+
+        try {
+            if (!dlicense.equals("")) {
+                PreparedStatement ps = connection.prepareStatement("SELECT * FROM customer WHERE dlicense = ? ");
+                ps.setString(1, dlicense);
+                rs = ps.executeQuery();
+                ret = rs.wasNull();
+                rs.close();
+                ps.close();
+            } else {
+                ret = false;
+            }
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+        return ret;
+    }
+
 
     /**
      * View all the vehicles
