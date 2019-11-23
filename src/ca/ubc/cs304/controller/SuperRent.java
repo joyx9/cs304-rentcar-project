@@ -99,8 +99,8 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     }
 
     @Override
-    public String rentVehicle(String cardName, Integer cardNo, String expDate, int confNo){
-        String str = carHandler.rentVehicle(cardName, cardNo, expDate, confNo);
+    public String rentVehicle(String cardName, Integer cardNo, String expDate, int confNo, String fromDate, String toDate){
+        String str = carHandler.rentVehicle(cardName, cardNo, expDate, confNo, fromDate, toDate);
         // todo this is a stub!
 	    str += ".      Thank you for renting from SuperRent!";
 	    return str;

@@ -17,7 +17,7 @@ public interface TerminalTransactionsDelegate {
 	public ArrayList<String[]> getAllVehicles(String vtname, String location);
 	public String makeReservation(String name, String address, String dlicense,
                                   String vtname, String fromDate, String toDate);
-	public String rentVehicle(String cardName, Integer cardNo, String expDate, int confNo);
+	public String rentVehicle(String cardName, Integer cardNo, String expDate, int confNo, String fromDate, String toDate);
 	public boolean reservationExists(int confno);
 	public void terminalTransactionsFinished();
 }
