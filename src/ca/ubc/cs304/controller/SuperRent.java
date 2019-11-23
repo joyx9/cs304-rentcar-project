@@ -114,6 +114,11 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     public String returnVehicle (int rid, String returnDate, int odometer, String gasTankFull){
         return carHandler.returnVehicle(rid, returnDate, odometer, gasTankFull);
     }
+
+    @Override
+    public ArrayList<String[]>getDailyRentals(){
+     return carHandler.getDailyRentals();
+    }
 	// /**
 	//  * TermainalTransactionsDelegate Implementation
 	//  * 

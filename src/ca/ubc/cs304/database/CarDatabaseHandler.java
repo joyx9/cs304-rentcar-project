@@ -461,7 +461,7 @@ public class CarDatabaseHandler {
      */
 
     /**
-     * Generate Daily Rental Report TODO!!!!! TODO: need to construct another class
+     * Generate Daily Rental Report
      * to store report info ???
      */
     public ArrayList<String[]> getDailyRentals() {
@@ -482,7 +482,8 @@ public class CarDatabaseHandler {
             rs = getReport.executeQuery("select location, vtname, count(*) from dailyrent group by location, vtname");
 
             while (rs.next()) {
-                String[] reportRow = new String[] { rs.getString("location"), rs.getString("vtname"),
+                String[] reportRow = new String[] { rs.getString("location"),
+                        rs.getString("vtname"),
                         Integer.toString(rs.getInt(3)) };
                 report.add(reportRow);
             }

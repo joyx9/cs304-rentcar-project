@@ -12,16 +12,17 @@ public class ErrorDisplay extends JFrame{
         frame.setTitle("Rent-A-Car");
         setupDisplay(frame.getContentPane());
         frame.pack();
+        frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
     }
 
     private void setupDisplay(Container pane) {
-        pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        pane.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         // adds introductory label
         JLabel label = new JLabel();
-        label.setText("Error: " + errString);
+        label.setText(errString);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 0;

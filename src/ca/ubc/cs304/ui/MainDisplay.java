@@ -13,7 +13,6 @@ public class MainDisplay extends JFrame implements ActionListener {
     private static String[] multStrings= {"view vehicles", "make reservation", "rent vehicle",
                                             "return vehicle", "generate report"};
     private static Font defaultFont = new Font("Courier New", Font.PLAIN, 25);
-    private static Pattern p = Pattern.compile("^[ a-zA-Z]*$");
     final static int width = 1000;
     final static int height = 800;
     private JFrame frame;
@@ -86,7 +85,7 @@ public class MainDisplay extends JFrame implements ActionListener {
             } else if (multString == "return vehicle") {
                 new ReturnCarDisplay (this, delegate);
             } else if (multString == "generate report"){
-                new GenerateReportDisplay (this);
+                new GenerateReportDisplay (this, delegate);
             }
             frame.setVisible(false);
         }

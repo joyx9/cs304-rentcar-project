@@ -163,10 +163,9 @@ public class ViewVehiclesDisplay extends JFrame implements ActionListener {
         frame.repaint();
     }
 
-    private void showVehicleDetails(ArrayList<String[]> str){
+    private void showVehicleDetails(){
         // remove some buttons
         frame.getContentPane().remove(showavbutton);
-        // shows details in a table todo
         // headers for the table
         String[] columns = new String[] {
                 "Location", "Make", "Model", "License", "City", "Color", "Status"
@@ -220,7 +219,7 @@ public class ViewVehiclesDisplay extends JFrame implements ActionListener {
             frame.setVisible(false);
         } else if (e.getActionCommand() == "detailsPressed"){
             // new ViewVehicleDetailDisplay(mainDisplay);
-            this.showVehicleDetails(vehicles);
+            this.showVehicleDetails();
         }
     }
 }

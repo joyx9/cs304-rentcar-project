@@ -19,6 +19,7 @@ public interface TerminalTransactionsDelegate {
                                   String vtname, String fromDate, String toDate);
 	public String rentVehicle(String cardName, Integer cardNo, String expDate, int confNo, String fromDate, String toDate);
 	public String returnVehicle(int rid, String returnDate, int odometer, String gasTankFull);
+	public ArrayList<String[]>getDailyRentals();
 	public boolean reservationExists(int confno);
 	public void terminalTransactionsFinished();
 }
