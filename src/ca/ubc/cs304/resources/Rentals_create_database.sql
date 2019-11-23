@@ -25,7 +25,7 @@ create table vehicle
 	model varchar(40) not null,
 	year int not null,
 	color varchar(40) not null,
-	odometer int not null,
+	odometer varchar(40) not null,
 	vtname varchar(40) not null,
 	status varchar(40) not null,
 	location varchar(40) not null,
@@ -36,14 +36,14 @@ create table vehicle
 create table customer
 	(name varchar(40) not null,
 	address varchar(40) not null,
-	dlicense int not null,
+	dlicense varchar(40) not null,
 	primary key (dlicense));
 
 	
 create table reservations
 	(confNo int not null,
 	vtname varchar(40) not null,
-	dlicense int not null,
+	dlicense varchar(40) not null,
 	reserveFromDate varchar(40) not null,
 	reserveToDate varchar(40) not null,
 	primary key (confNo),
@@ -52,13 +52,13 @@ create table reservations
 
 create table rentals
 	(rid int not null,
-	dlicense int not null,
+	dlicense varchar(40) not null,
 	vlicense varchar(40) not null,
 	rentFromDate varchar(40) not null,
 	rentToDate varchar(40) not null,
-	odometer int not null,
+	odometer varchar(40) not null,
 	cardName varchar(40) not null,
-	cardNo int not null,
+	cardNo varchar(40) not null,
 	ExpDate varchar(40) not null,
 	confNo int,
 	primary key (rid),
@@ -71,7 +71,7 @@ create table returns
 	(rid int not null,
 	dateReturned varchar(40) not null,
 	timeReturned varchar(40) not null,
-	odometer int not null,
+	odometer varchar(40) not null,
 	fulltank char(1),
 	value varchar(40) not null,
 	foreign key (rid) references rentals ON DELETE CASCADE,
