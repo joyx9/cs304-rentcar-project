@@ -262,8 +262,65 @@ public class CarDatabaseHandler {
      * to complete : CardNo + ExpDate
      * return a receipt displaying: confNo, date of reservation, vtname, location, rental lasts for etc.
      */
-    public RentReceipt rentVehicle(String vtname, String location, String cardName, Integer cardNo, String expDate, int confNo) {
-        RentReceipt result = null;
+    // public RentReceipt rentVehicle(String vtname, String location, String cardName, Integer cardNo, String expDate, int confNo) {
+    //     RentReceipt result = null;
+    //     ResultSet rs = null;
+
+    //     try {
+    //         //if reservation was made
+    //         Statement stmt = connection.createStatement();
+    //         if (confNo != 0) { //confNo was not empty
+    //             // get vtname from reservations with confNo
+    //             // find a car with that vtname
+    //             // that car will have location 
+    //             PreparedStatement ps = connection.prepareStatement("INSERT INTO rentals VALUES(rentID.nextval,?,?,?,?,?,?,?,?,?");
+    //             ps.setString(6, cardName);
+    //             ps.setInt(7, cardNo);
+    //             ps.setString(8, expDate);
+    //             ps.setInt(9, confNo);
+
+    //             PreparedStatement getReservation = connection.prepareStatement("SELECT vtname, dlicense, reserveFromDate, reserveFromTime, reserveToDate, reserveToTime FROM reservations WHERE confNo = ?");
+    //             getReservation.setInt(1, confNo);
+    //             PreparedStatement getVehicles = connection.prepareStatement("SELECT vlicense, odometer FROM vehicle WHERE vtname = ?");
+
+    //             ResultSet reserveSet = getReservation.executeQuery();
+    //             while(reserveSet.next()) {
+    //                 getVehicles.setString(1, reserveSet.getString("vtname"));
+    //                 ps.setInt(1, reserveSet.getInt("dlicense"));
+    //                 ps.setString(3, reserveSet.getString("reserveFromDate"));
+    //                 //ps.setTime(4, reserveSet.getTime("reserveFromTime"));
+    //                 ps.setString(4, reserveSet.getString("reserveToDate"));
+    //                 //ps.setTime(6, reserveSet.getTime("reserveToTime"));
+    //             }
+                
+    //             ResultSet vehicleSet = getVehicles.executeQuery();
+    //             while (vehicleSet.first()) {
+    //                 ps.setInt(2, vehicleSet.getInt("vlicense"));
+    //                 ps.setInt(5, vehicleSet.getInt("odometer"));
+    //             }
+
+    //             ps.executeUpdate();
+    //             connection.commit();
+
+    //             //need to return confNo, rental lasts for can just be fromDate and toDate
+    //             //return vtname, location <- this comes from the vehicle relation....using rentals foreign key vlicense
+    //         }
+    //         if (vtname == null && location == null) {
+    //             rs = stmt.executeQuery("SELECT * FROM vehicle ORDER BY "); //>> no input from customer
+    //         }
+
+    //         rs.close();
+    //         stmt.close();
+    //     } catch (SQLException e) {
+    //         System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+    //     }
+
+    //     // stub
+    //     return result;
+    // }
+
+    public ArrayList<String> rentVehicle(String cardName, Integer cardNo, String expDate, int confNo) {
+        ArrayList<String> rentReceipt = new ArrayList<>();
         ResultSet rs = null;
 
         try {
@@ -284,14 +341,6 @@ public class CarDatabaseHandler {
                 PreparedStatement getVehicles = connection.prepareStatement("SELECT vlicense, odometer FROM vehicle WHERE vtname = ?");
 
                 ResultSet reserveSet = getReservation.executeQuery();
-                while(reserveSet.next()) {
-                    getVehicles.setString(1, reserveSet.getString("vtname"));
-                    ps.setInt(1, reserveSet.getInt("dlicense"));
-                    ps.setString(3, reserveSet.getString("reserveFromDate"));
-                    //ps.setTime(4, reserveSet.getTime("reserveFromTime"));
-                    ps.setString(4, reserveSet.getString("reserveToDate"));
-                    //ps.setTime(6, reserveSet.getTime("reserveToTime"));
-                }
                 
                 ResultSet vehicleSet = getVehicles.executeQuery();
                 while (vehicleSet.first()) {
@@ -302,22 +351,35 @@ public class CarDatabaseHandler {
                 ps.executeUpdate();
                 connection.commit();
 
+                rs = stmt.executeQuery("SELECT confNo, vtname, location, rentFromDate, rentToDate FROM rentals WHERE rid = rentID.currval");
+                
+                while(rs.next()) {
+                    rentReceipt.add(Integer.toString(rs.getInt("confNo")));
+                    rentReceipt.add(rs.getString("vtname"));
+                    rentReceipt.add(rs.getString("location"));
+                    rentReceipt.add(rs.getString("rentFromDate"));
+                    rentReceipt.add(rs.getString("rentToDate"));
+                }
+                
+                getReservation.close();
+                getVehicles.close();
+                ps.close();
+                reserveSet.close();
+                vehicleSet.close();
+
                 //need to return confNo, rental lasts for can just be fromDate and toDate
                 //return vtname, location <- this comes from the vehicle relation....using rentals foreign key vlicense
             }
-            if (vtname == null && location == null) {
-                rs = stmt.executeQuery("SELECT * FROM vehicle ORDER BY "); //>> no input from customer
-            }
-
+            
             rs.close();
             stmt.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
 
-        // stub
-        return result;
+        return rentReceipt;
     }
+
 
     /**
      *  Returning a vehicle
@@ -325,16 +387,18 @@ public class CarDatabaseHandler {
      *  (e.g., reservation confirmation number, date of return, how the total was calculated etc.)
      *  if the vehicle is not rented throw error message
      *  Clerk enters:date, the time, the odometer reading, and  gas tank is full?
-     * //TODO TODO TODO TODO TODO TOTALCOST IS JUST A MAKEUP NUMBER
+     * //TODO TODO TODO TODO TODO LOOK AT ME NOT DONE YET TODO TODO TODO TODO TODO
      */
     public ArrayList<String> returnVehicle(int rid, String returnDate, int odometer, String gasTankFull){
         ArrayList<String> returnRecipt = new ArrayList<>();
 
         try {
+            //if rid does not exist return empty string
             if (!ridExist(rid)){
                 returnRecipt.add("Sorry this rental id does not exist.");
             } else {
 
+                Integer totalCost = -1;
                 PreparedStatement ps = connection.prepareStatement("INSERT INTO returns VALUES (?,?,?,?)");
                 ps.setInt(1, rid);
                 ps.setString(2, returnDate);
@@ -343,18 +407,41 @@ public class CarDatabaseHandler {
 
                 ps.executeUpdate();
                 connection.commit();
-                ps.close();
 
-                // return array: [rid, returnDate, totalCost]
-                returnRecipt.add(Integer.toString(rid));
-                returnRecipt.add(returnDate);
-                returnRecipt.add(Integer.toString(180));
+                PreparedStatement cs = connection.prepareStatement("SELECT odometer FROM rentals" +
+                        "WHERE rid = ?");
+                cs.setInt(1, rid);
+                ResultSet rs = cs.executeQuery();
+
+//
+//
+//                Statement stmt = connection.createStatement(); //TODO
+//                ResultSet rs = stmt.executeQuery("SELECT confNo FROM reservations WHERE confNo = reserveConfNo.currval");
+//                result = Integer.toString(rs.getInt("confNo")); // the confNo to return
+
+                ps.close();
+                rs.close();
+                //stmt.close();
+
+
+
+
+
+
+
+
+
 
             }
+
+
+                //need to return confNo, rental lasts for can just be fromDate and toDate
+                //return vtname, location <- this comes from the vehicle relation....using rentals foreign key vlicense
 
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
+
 
         return returnRecipt;
     }
@@ -383,11 +470,6 @@ public class CarDatabaseHandler {
         }
         return rs; //TODO need to save it locally
     }
-
-
-
-
-
 
     public boolean login(String username, String password) {
 		try {
