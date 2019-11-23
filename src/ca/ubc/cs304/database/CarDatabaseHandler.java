@@ -343,8 +343,8 @@ public class CarDatabaseHandler {
                 
                 ResultSet vehicleSet = getVehicles.executeQuery();
                 if (vehicleSet.next()) {
-                    ps.setInt(2, vehicleSet.getInt("vlicense"));
-                    ps.setInt(5, vehicleSet.getInt("odometer"));
+                    ps.setString(2, vehicleSet.getString("vlicense"));
+                    ps.setString(5, vehicleSet.getString("odometer"));
                 }
 
                 ps.executeUpdate();
