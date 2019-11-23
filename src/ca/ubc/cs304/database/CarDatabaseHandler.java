@@ -46,7 +46,7 @@ public class CarDatabaseHandler {
                 PreparedStatement ps = connection.prepareStatement("SELECT * FROM reservations WHERE confNo = ? ");
                 ps.setInt(1, confNo);
                 rs = ps.executeQuery();
-                ret = rs.wasNull();
+                ret = !rs.wasNull();
                 rs.close();
                 ps.close();
             } else {
@@ -71,7 +71,7 @@ public class CarDatabaseHandler {
                 PreparedStatement ps = connection.prepareStatement("SELECT * FROM rentals WHERE rid = ? ");
                 ps.setInt(1, rid);
                 rs = ps.executeQuery();
-                ret = rs.wasNull();
+                ret = !rs.wasNull();
                 rs.close();
                 ps.close();
             } else {
@@ -95,7 +95,7 @@ public class CarDatabaseHandler {
                 PreparedStatement ps = connection.prepareStatement("SELECT * FROM reservations WHERE dlicense = ? ");
                 ps.setString(1, dlicense);
                 rs = ps.executeQuery();
-                ret = rs.wasNull();
+                ret = !rs.wasNull();
                 rs.close();
                 ps.close();
             } else {
@@ -119,7 +119,7 @@ public class CarDatabaseHandler {
                 PreparedStatement ps = connection.prepareStatement("SELECT * FROM customer WHERE dlicense = ? ");
                 ps.setString(1, dlicense);
                 rs = ps.executeQuery();
-                ret = rs.wasNull();
+                ret = !rs.wasNull();
                 rs.close();
                 ps.close();
             } else {
@@ -325,7 +325,7 @@ public class CarDatabaseHandler {
      *  (e.g., reservation confirmation number, date of return, how the total was calculated etc.)
      *  if the vehicle is not rented throw error message
      *  Clerk enters:date, the time, the odometer reading, and  gas tank is full?
-     *
+     * //TODO TODO TODO TODO TODO LOOK AT ME NOT DONE YET TODO TODO TODO TODO TODO
      */
     public ArrayList<String> returnVehicle(int rid, String returnDate, int odometer, String gasTankFull){
         ArrayList<String> returnRecipt = new ArrayList<>();
@@ -379,10 +379,6 @@ public class CarDatabaseHandler {
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
-
-
-
-
 
 
         return returnRecipt;
