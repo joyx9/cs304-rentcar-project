@@ -332,7 +332,7 @@ public class CarDatabaseHandler {
     //     return result;
     // }
 
-    public String rentVehicle(String cardName, Integer cardNo, String expDate, int confNo) {
+    public String rentVehicle(String cardName, Integer cardNo, String expDate, int confNo, String fromDate, String toDate) {
         String rentReceipt = "";
         ResultSet rs = null;
 
@@ -344,17 +344,21 @@ public class CarDatabaseHandler {
                 // find a car with that vtname
                 // that car will have location 
                 PreparedStatement ps = connection.prepareStatement("INSERT INTO rentals VALUES(rentID.nextval,?,?,?,?,?,?,?,?,?");
+                ps.setString(3, fromDate);
+                ps.setString(4, toDate);
                 ps.setString(6, cardName);
                 ps.setInt(7, cardNo);
                 ps.setString(8, expDate);
                 ps.setInt(9, confNo);
 
-                PreparedStatement getReservation = connection.prepareStatement("SELECT vtname, dlicense, reserveFromDate, reserveFromTime, reserveToDate, reserveToTime FROM reservations WHERE confNo = ?");
+                PreparedStatement getReservation = connection.prepareStatement("SELECT vtname, dlicense FROM reservations WHERE confNo = ?");
                 getReservation.setInt(1, confNo);
                 PreparedStatement getVehicles = connection.prepareStatement("SELECT vlicense, odometer FROM vehicle WHERE vtname = ?");
 
                 ResultSet reserveSet = getReservation.executeQuery();
-                
+                if (reserveSet.next()) {
+                    ps.setString(1, reserveSet.getString("dlicense"));
+                }
                 ResultSet vehicleSet = getVehicles.executeQuery();
                 if (vehicleSet.next()) {
                     ps.setString(2, vehicleSet.getString("vlicense"));

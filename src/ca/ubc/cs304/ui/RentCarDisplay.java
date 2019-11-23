@@ -120,7 +120,7 @@ public class RentCarDisplay extends JFrame implements ActionListener {
             frame.getContentPane().add(cardNotf, gbc);
 
             // add expDate
-            JLabel lexp = new JLabel("Card Expiry Date");
+            JLabel lexp = new JLabel();
             lexp.setText("credit card expiry date:");
             lexp.setFont(defaultFont);
             gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -138,8 +138,8 @@ public class RentCarDisplay extends JFrame implements ActionListener {
             frame.getContentPane().add(expDatetf, gbc);
 
             // add cardName
-            JLabel lcname = new JLabel("Card Expiry Date");
-            lcname.setText("credit card expiry date:");
+            JLabel lcname = new JLabel();
+            lcname.setText("credit card name:");
             lcname.setFont(defaultFont);
             gbc.fill = GridBagConstraints.HORIZONTAL;
             gbc.gridx = 0;
