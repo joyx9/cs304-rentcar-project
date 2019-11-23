@@ -342,7 +342,7 @@ public class CarDatabaseHandler {
                 ResultSet reserveSet = getReservation.executeQuery();
                 
                 ResultSet vehicleSet = getVehicles.executeQuery();
-                while (vehicleSet.first()) {
+                if (vehicleSet.next()) {
                     ps.setInt(2, vehicleSet.getInt("vlicense"));
                     ps.setInt(5, vehicleSet.getInt("odometer"));
                 }
