@@ -47,7 +47,7 @@ public class CarDatabaseHandler {
                 PreparedStatement ps = connection.prepareStatement("SELECT * FROM reservations WHERE confNo = ? ");
                 ps.setInt(1, confNo);
                 rs = ps.executeQuery();
-                ret = !rs.wasNull();
+                ret = rs.next();
                 rs.close();
                 ps.close();
             } else {
@@ -71,7 +71,7 @@ public class CarDatabaseHandler {
                 PreparedStatement ps = connection.prepareStatement("SELECT * FROM rentals WHERE rid = ? ");
                 ps.setInt(1, rid);
                 rs = ps.executeQuery();
-                ret = !rs.wasNull();
+                ret = rs.next();
                 rs.close();
                 ps.close();
             } else {
@@ -95,7 +95,7 @@ public class CarDatabaseHandler {
                 PreparedStatement ps = connection.prepareStatement("SELECT * FROM reservations WHERE dlicense = ? ");
                 ps.setString(1, dlicense);
                 rs = ps.executeQuery();
-                ret = !rs.wasNull();
+                ret = rs.next();
                 rs.close();
                 ps.close();
             } else {
@@ -361,35 +361,36 @@ public class CarDatabaseHandler {
                 boolean query = reserveSet.next();
                 System.out.println(query);
                 if (query) {
-                    ps.setString(1, reserveSet.getString("dlicense")); //rent.dlicense from reservations
-                    getVehicles.setString(1, reserveSet.getString("vtname")); //vehicle.vtname from reservations
+                    ps.setString(1, reserveSet.getString("dlicense")); // rent.dlicense from reservations
+                    getVehicles.setString(1, reserveSet.getString("vtname")); // vehicle.vtname from reservations
                 }
                 ResultSet vehicleSet = getVehicles.executeQuery();
                 if (vehicleSet.next()) {
                     ps.setString(2, vehicleSet.getString("vlicense"));
-                    ps.setString(5, vehicleSet.getString("odometer")); //get rent vlicense and odometer from that specific vehicle
+                    ps.setString(5, vehicleSet.getString("odometer")); // get rent vlicense and odometer from that
+                                                                       // specific vehicle
                 }
 
                 ps.executeUpdate();
                 connection.commit();
 
                 Statement findRID = connection.createStatement();
-                ResultSet rentID = findRID.executeQuery(
-                        "SELECT rid FROM rentals WHERE rid = (SELECT max(rid) FROM rentals)");
+                ResultSet rentID = findRID
+                        .executeQuery("SELECT rid FROM rentals WHERE rid = (SELECT max(rid) FROM rentals)");
                 // rs.next();
                 System.out.println(rentID.next());
                 int rid = rentID.getInt("rid"); // the confNo to return
 
-                PreparedStatement getReceipt = connection.prepareStatement("SELECT rid, vlicense, rentFromDate, rentToDate FROM rentals WHERE rid = ?");
+                PreparedStatement getReceipt = connection
+                        .prepareStatement("SELECT rid, vlicense, rentFromDate, rentToDate FROM rentals WHERE rid = ?");
                 getReceipt.setInt(1, rid);
                 rs = getReceipt.executeQuery();
-                
+
                 // while(rs.next()) {
                 rs.next();
                 rentReceipt = ("Your rental confirmaton number is: " + Integer.toString(rs.getInt("rid"))
-                        + "\n Vehicle License: " + (rs.getString("vlicense"))
-                        + "\n Starting Date : " + (rs.getString("rentFromDate"))
-                        + "\n End Date: " + (rs.getString("rentToDate")));
+                        + "\n Vehicle License: " + (rs.getString("vlicense")) + "\n Starting Date : "
+                        + (rs.getString("rentFromDate")) + "\n End Date: " + (rs.getString("rentToDate")));
                 // }
 
                 getReservation.close();
@@ -449,7 +450,7 @@ public class CarDatabaseHandler {
         } catch (SQLException e) {
 
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-            returnRecipt = ("Sorry there is an error occurred please contact help desk.");
+            returnRecipt = ("Sorry, an error occurred, please contact help desk.");
         }
 
         return returnRecipt;
@@ -471,15 +472,14 @@ public class CarDatabaseHandler {
             String todaysDate = getDate();
             System.out.println(todaysDate);
             PreparedStatement createView = connection.prepareStatement(
-                    "create or replace view dailyrent as select v.location, v.vtname from vehicle v, rentals r where r.rentFromDate = ? and v.vlicense = r.vlicense;");
+                    "create or replace view dailyrent as select v.location, v.vtname from vehicle v, rentals r where r.rentFromDate = ? and v.vlicense = r.vlicense");
             createView.setString(1, todaysDate);
 
             ResultSet dailyRentView = createView.executeQuery();
             connection.commit();
 
             Statement getReport = connection.createStatement();
-            rs = getReport
-                    .executeQuery("select location, vtname, count(location) from dailyrent group by location, vtname");
+            rs = getReport.executeQuery("select location, vtname, count(*) from dailyrent group by location, vtname");
 
             while (rs.next()) {
                 String[] reportRow = new String[] { rs.getString("location"), rs.getString("vtname"),
