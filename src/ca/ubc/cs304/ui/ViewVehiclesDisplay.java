@@ -213,7 +213,6 @@ public class ViewVehiclesDisplay extends JFrame implements ActionListener {
 //            vehicles = new ArrayList<>();
 //            vehicles.add(str);
             this.showNumVehicles(Integer.toString(vehicles.size()));
-            System.out.println("cartype_tf:" + carTypetf.getText() + "_location_tf:" + locationtf.getText());
         } else if (e.getActionCommand() == "backPressed"){
             mainDisplay.returnFromDisplay();
             frame.setVisible(false);

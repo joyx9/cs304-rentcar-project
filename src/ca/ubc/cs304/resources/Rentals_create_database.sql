@@ -72,7 +72,7 @@ create table returns
 	dateReturned varchar(40) not null,
 	odometer varchar(40) not null,
 	fulltank char(1),
-	value varchar(40) not null,
+	value int not null,
 	foreign key (rid) references rentals ON DELETE CASCADE,
 	check (fulltank = 'y' or fulltank ='n'));
 
@@ -140,3 +140,27 @@ insert into vehicle
 values('FHE532', 'Mazda', 'Point', 2009, 'white', 10, 'SUV', 'available', 'Main St Toronto', 'Toronto');
 insert into vehicle
 values('GFT325', 'Toyota', 'Tomato', 2015, 'white', 10, 'truck', 'available', 'Main St Burnaby', 'Burnaby');
+insert into vehicle
+values('JFD342', 'Honda', 'Accord', 2000, 'black', 10, 'economy', 'available', 'Main St Vancouver', 'Vancouver');
+insert into vehicle
+values('DFG324', 'Lexus', 'GX', 2003, 'black', 10, 'economy', 'available', 'Main St Vancouver', 'Vancouver');
+insert into vehicle
+values('LOK342', 'Tesla', 'Yikes', 2017, 'grey', 10, 'economy', 'available', 'Main St Vancouver', 'Vancouver');
+insert into vehicle
+values('POF342', 'Honda', 'Point', 2004, 'black', 10, 'economy', 'available', 'Main St Vancouver', 'Vancouver');
+insert into vehicle
+values('ILY420', 'Ford', 'Blast', 2010, 'green', 10, 'economy', 'available', 'Main St Vancouver', 'Vancouver');
+insert into vehicle
+values('YAH690', 'Lavorre', 'Jester', 2012, 'blue', 10, 'economy', 'available', 'Main St Vancouver', 'Vancouver');
+insert into vehicle
+values('HAH666', 'Benz', 'OP-1', 2018, 'black', 10, 'standard', 'available', 'Main St Vancouver', 'Vancouver');
+insert into vehicle
+values('TWO222', 'Subaru', 'Scissor', 2010, 'red', 10, 'economy', 'available', 'Main St Vancouver', 'Vancouver');
+insert into vehicle
+values('ONE111', 'Audi', 'GT180', 2010, 'black', 10, 'compact', 'available', 'Main St Vancouver', 'Vancouver');
+insert into vehicle
+values('SUC699', 'Toyota', 'Mini', 2014, 'red', 10, 'economy', 'available', 'Main St Vancouver', 'Vancouver');
+insert into vehicle
+values('IMP432', 'Honda', 'Big', 2019, 'white', 10, 'SUV', 'available', 'Main St Vancouver', 'Vancouver');
+insert into vehicle
+values('ITR342', 'Honda', 'Accord', 2011, 'white', 10, 'economy', 'available', 'Main St Vancouver', 'Vancouver');

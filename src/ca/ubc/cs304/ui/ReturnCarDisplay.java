@@ -83,7 +83,7 @@ public class ReturnCarDisplay extends JFrame implements ActionListener {
 
         // add fulltank (Y/N)
         JLabel ltank = new JLabel();
-        ltank.setText("Tank Full? (Y/N):");
+        ltank.setText("Tank Full? (y/n):");
         ltank.setFont(defaultFont);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;

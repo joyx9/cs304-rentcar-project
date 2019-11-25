@@ -1,7 +1,5 @@
 package ca.ubc.cs304.database;
 
-import ca.ubc.cs304.model.RentReceipt;
-import ca.ubc.cs304.model.Reservations;
 import ca.ubc.cs304.model.Vehicles;
 import java.sql.*;
 import java.time.LocalDate;
@@ -194,38 +192,39 @@ public class CarDatabaseHandler {
     public String makeReservation(String vtname, String dlicense, String fromDate, String toDate) {
 
         String result = "";
+        if (isDateBeforeToday(fromDate) || isDateBeforeToday(toDate) || isToDateBefore(fromDate, toDate)) {
+            result = "ERROR: Invalid date was inputted";
+        } else {
+            try {
+                PreparedStatement ps = connection
+                        .prepareStatement("INSERT INTO reservations VALUES (reserveConfNo.nextval,?,?,?,?)");
+                ps.setString(1, vtname);
+                ps.setString(2, dlicense);
+                ps.setString(3, fromDate);
+                ps.setString(4, toDate);
 
-        try {
-            PreparedStatement ps = connection
-                    .prepareStatement("INSERT INTO reservations VALUES (reserveConfNo.nextval,?,?,?,?)");
-            ps.setString(1, vtname);
-            ps.setString(2, dlicense);
-            ps.setString(3, fromDate);
-            // ps.setTime(5, fromTime);
-            ps.setString(4, toDate);
-            // ps.setTime(6, toTime);
+                ps.executeUpdate();
+                connection.commit();
 
-            ps.executeUpdate();
-            connection.commit();
-
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(
-                    "SELECT confNo FROM reservations WHERE confNo = (SELECT max(confNo) FROM reservations)");
-            // rs.next();
-            System.out.println(rs.next());
-            result = Integer.toString(rs.getInt("confNo")); // the confNo to return
-            System.out.println(result);
-            ps.close();
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            if (e.getMessage().contains("ORA-02291")) {
-                result = "ERROR: your desired car type is not available";
-            } else {
-                result = "ERROR: your inputs are invalid";
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(
+                        "SELECT confNo FROM reservations WHERE confNo = (SELECT max(confNo) FROM reservations)");
+                rs.next();
+                result = Integer.toString(rs.getInt("confNo")); // the confNo to return
+                ps.close();
+                rs.close();
+                stmt.close();
+            } catch (SQLException e) {
+                if (e.getMessage().contains("ORA-02291")) {
+                    result = "ERROR: your desired car type is not available";
+                } else if (nullError(e)) {
+                    result = "ERROR: inputs cannot be null";
+                } else {
+                    result = "ERROR: your inputs are invalid";
+                }
+                System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+                rollbackConnection();
             }
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-            rollbackConnection();
         }
 
         return result;
@@ -256,157 +255,92 @@ public class CarDatabaseHandler {
 
     }
 
-    /**
-     * Renting a vehicle If reservation no made -> insert into reservation, customer
-     * provides confNo & dlicense find the rest from reservation to complete :
-     * CardNo + ExpDate return a receipt displaying: confNo, date of reservation,
-     * vtname, location, rental lasts for etc.
-     */
-    // public RentReceipt rentVehicle(String vtname, String location, String
-    // cardName, Integer cardNo, String expDate, int confNo) {
-    // RentReceipt result = null;
-    // ResultSet rs = null;
-
-    // try {
-    // //if reservation was made
-    // Statement stmt = connection.createStatement();
-    // if (confNo != 0) { //confNo was not empty
-    // // get vtname from reservations with confNo
-    // // find a car with that vtname
-    // // that car will have location
-    // PreparedStatement ps = connection.prepareStatement("INSERT INTO rentals
-    // VALUES(rentID.nextval,?,?,?,?,?,?,?,?,?");
-    // ps.setString(6, cardName);
-    // ps.setInt(7, cardNo);
-    // ps.setString(8, expDate);
-    // ps.setInt(9, confNo);
-
-    // PreparedStatement getReservation = connection.prepareStatement("SELECT
-    // vtname, dlicense, reserveFromDate, reserveFromTime, reserveToDate,
-    // reserveToTime FROM reservations WHERE confNo = ?");
-    // getReservation.setInt(1, confNo);
-    // PreparedStatement getVehicles = connection.prepareStatement("SELECT vlicense,
-    // odometer FROM vehicle WHERE vtname = ?");
-
-    // ResultSet reserveSet = getReservation.executeQuery();
-    // while(reserveSet.next()) {
-    // getVehicles.setString(1, reserveSet.getString("vtname"));
-    // ps.setInt(1, reserveSet.getInt("dlicense"));
-    // ps.setString(3, reserveSet.getString("reserveFromDate"));
-    // //ps.setTime(4, reserveSet.getTime("reserveFromTime"));
-    // ps.setString(4, reserveSet.getString("reserveToDate"));
-    // //ps.setTime(6, reserveSet.getTime("reserveToTime"));
-    // }
-
-    // ResultSet vehicleSet = getVehicles.executeQuery();
-    // while (vehicleSet.first()) {
-    // ps.setInt(2, vehicleSet.getInt("vlicense"));
-    // ps.setInt(5, vehicleSet.getInt("odometer"));
-    // }
-
-    // ps.executeUpdate();
-    // connection.commit();
-
-    // //need to return confNo, rental lasts for can just be fromDate and toDate
-    // //return vtname, location <- this comes from the vehicle relation....using
-    // rentals foreign key vlicense
-    // }
-    // if (vtname == null && location == null) {
-    // rs = stmt.executeQuery("SELECT * FROM vehicle ORDER BY "); //>> no input from
-    // customer
-    // }
-
-    // rs.close();
-    // stmt.close();
-    // } catch (SQLException e) {
-    // System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-    // }
-
-    // // stub
-    // return result;
-    // }
-
     public String rentVehicle(String cardName, Integer cardNo, String expDate, int confNo, String fromDate,
             String toDate) {
         String rentReceipt = "";
         ResultSet rs = null;
 
-        try {
-            // if reservation was made
-            Statement stmt = connection.createStatement();
-            if (confNo != 0) { // confNo was not empty
-                // get vtname from reservations with confNo
-                // find a car with that vtname
-                // that car will have location
-                PreparedStatement ps = connection
-                        .prepareStatement("INSERT INTO rentals VALUES(rentID.nextval,?,?,?,?,?,?,?,?,?)");
-                ps.setString(3, fromDate);
-                ps.setString(4, toDate);
-                ps.setString(6, cardName);
-                ps.setInt(7, cardNo);
-                ps.setString(8, expDate);
-                ps.setInt(9, confNo);
+        if (isDateBeforeToday(fromDate) || isDateBeforeToday(toDate) || isToDateBefore(fromDate, toDate)
+                || isDateBeforeToday(expDate)) {
+            rentReceipt = "ERROR: Invalid date was inputted";
+        } else {
+            try {
+                Statement stmt = connection.createStatement();
+                if (confNo != 0) { // confNo was not empty
+                    // get vtname from reservations with confNo
+                    // find a car with that vtname
+                    // that car will have location
+                    PreparedStatement ps = connection
+                            .prepareStatement("INSERT INTO rentals VALUES(rentID.nextval,?,?,?,?,?,?,?,?,?)");
+                    ps.setString(3, fromDate);
+                    ps.setString(4, toDate);
+                    ps.setString(6, cardName);
+                    ps.setInt(7, cardNo);
+                    ps.setString(8, expDate);
+                    ps.setInt(9, confNo);
 
-                PreparedStatement getReservation = connection
-                        .prepareStatement("SELECT vtname, dlicense FROM reservations WHERE confNo = ?");
-                getReservation.setInt(1, confNo);
-                PreparedStatement getVehicles = connection
-                        .prepareStatement("SELECT vlicense, odometer FROM vehicle WHERE vtname = ?");
+                    PreparedStatement getReservation = connection
+                            .prepareStatement("SELECT vtname, dlicense FROM reservations WHERE confNo = ?");
+                    getReservation.setInt(1, confNo);
+                    PreparedStatement getVehicles = connection
+                            .prepareStatement("SELECT vlicense, odometer FROM vehicle WHERE vtname = ?");
 
-                ResultSet reserveSet = getReservation.executeQuery();
-                boolean query = reserveSet.next();
-                System.out.println(query);
-                if (query) {
-                    ps.setString(1, reserveSet.getString("dlicense")); // rent.dlicense from reservations
-                    getVehicles.setString(1, reserveSet.getString("vtname")); // vehicle.vtname from reservations
+                    ResultSet reserveSet = getReservation.executeQuery();
+                    boolean query = reserveSet.next();
+                    if (query) {
+                        ps.setString(1, reserveSet.getString("dlicense")); // rent.dlicense from reservations
+                        getVehicles.setString(1, reserveSet.getString("vtname")); // vehicle.vtname from reservations
+                    }
+                    ResultSet vehicleSet = getVehicles.executeQuery();
+                    if (vehicleSet.next()) {
+                        ps.setString(2, vehicleSet.getString("vlicense"));
+                        ps.setString(5, vehicleSet.getString("odometer")); // get rent vlicense and odometer from that
+                                                                           // specific vehicle
+                    }
+
+                    ps.executeUpdate();
+                    connection.commit();
+
+                    Statement findRID = connection.createStatement();
+                    ResultSet rentID = findRID
+                            .executeQuery("SELECT rid FROM rentals WHERE rid = (SELECT max(rid) FROM rentals)");
+                    rentID.next();
+                    int rid = rentID.getInt("rid"); // the confNo to return
+
+                    PreparedStatement getReceipt = connection.prepareStatement(
+                            "SELECT rid, vlicense, rentFromDate, rentToDate FROM rentals WHERE rid = ?");
+                    getReceipt.setInt(1, rid);
+                    rs = getReceipt.executeQuery();
+
+                    // while(rs.next()) {
+                    rs.next();
+                    rentReceipt = ("Your rental confirmaton number is: " + Integer.toString(rs.getInt("rid"))
+                            + "\n Vehicle License: " + (rs.getString("vlicense")) + "\n Starting Date : "
+                            + (rs.getString("rentFromDate")) + "\n End Date: " + (rs.getString("rentToDate")));
+                    // }
+
+                    getReservation.close();
+                    getVehicles.close();
+                    ps.close();
+                    reserveSet.close();
+                    vehicleSet.close();
+
+                    // need to return confNo, rental lasts for can just be fromDate and toDate
+                    // return vtname, location <- this comes from the vehicle relation....using
+                    // rentals foreign key vlicense
                 }
-                ResultSet vehicleSet = getVehicles.executeQuery();
-                if (vehicleSet.next()) {
-                    ps.setString(2, vehicleSet.getString("vlicense"));
-                    ps.setString(5, vehicleSet.getString("odometer")); // get rent vlicense and odometer from that
-                                                                       // specific vehicle
+
+                rs.close();
+                stmt.close();
+            } catch (SQLException e) {
+                System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+                if (nullError(e)) {
+                    rentReceipt = "ERROR: inputs cannot be empty";
+                } else {
+                    rentReceipt = "Ooops... Somthing Wrong happened.";
                 }
-
-                ps.executeUpdate();
-                connection.commit();
-
-                Statement findRID = connection.createStatement();
-                ResultSet rentID = findRID
-                        .executeQuery("SELECT rid FROM rentals WHERE rid = (SELECT max(rid) FROM rentals)");
-                // rs.next();
-                System.out.println(rentID.next());
-                int rid = rentID.getInt("rid"); // the confNo to return
-
-                PreparedStatement getReceipt = connection
-                        .prepareStatement("SELECT rid, vlicense, rentFromDate, rentToDate FROM rentals WHERE rid = ?");
-                getReceipt.setInt(1, rid);
-                rs = getReceipt.executeQuery();
-
-                // while(rs.next()) {
-                rs.next();
-                rentReceipt = ("Your rental confirmaton number is: " + Integer.toString(rs.getInt("rid"))
-                        + "\n Vehicle License: " + (rs.getString("vlicense")) + "\n Starting Date : "
-                        + (rs.getString("rentFromDate")) + "\n End Date: " + (rs.getString("rentToDate")));
-                // }
-
-                getReservation.close();
-                getVehicles.close();
-                ps.close();
-                reserveSet.close();
-                vehicleSet.close();
-
-                // need to return confNo, rental lasts for can just be fromDate and toDate
-                // return vtname, location <- this comes from the vehicle relation....using
-                // rentals foreign key vlicense
             }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-            rentReceipt = "Ooops... Somthing Wrong happened.";
         }
-
         return rentReceipt;
     }
 
@@ -415,17 +349,18 @@ public class CarDatabaseHandler {
      * receipt with the necessary details (e.g., reservation confirmation number,
      * date of return, how the total was calculated etc.) if the vehicle is not
      * rented throw error message Clerk enters:date, the time, the odometer reading,
-     * and gas tank is full? //TODO ->> LOOK AT ME the totalcost is a make up number
-     * !!!!!!
+     * and gas tank is full !!!!!!
      */
     public String returnVehicle(int rid, String returnDate, int odometer, String gasTankFull) {
         String returnRecipt = "";
 
-        try {
-            if (!ridExist(rid)) {
-                returnRecipt = ("Sorry this rental id does not exist.");
-            } else {
-
+        if (!ridExist(rid)) {
+            returnRecipt = ("Sorry this rental id does not exist.");
+        }
+        if (isDateBeforeToday(returnDate)) {
+            returnRecipt = "ERROR: Invalid date was inputted.";
+        } else {
+            try {
                 PreparedStatement ps = connection.prepareStatement("INSERT INTO returns VALUES (?,?,?,?,?)");
                 ps.setInt(1, rid);
                 ps.setString(2, returnDate);
@@ -439,14 +374,15 @@ public class CarDatabaseHandler {
 
                 // return array: [rid, returnDate, totalCost]
                 returnRecipt = ("Your return Id is: " + Integer.toString(rid) + "\nReturn Date: " + returnDate
-                        + "\nYour total cost is: 180 ");
-
+                        + "\nYour total cost is: $180 ");
+            } catch (SQLException e) {
+                System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+                if (nullError(e)) {
+                    returnRecipt = "ERROR: inputs cannot be empty";
+                } else {
+                    returnRecipt = ("Sorry, an error occurred, please contact help desk.");
+                }
             }
-
-        } catch (SQLException e) {
-
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-            returnRecipt = ("Sorry, an error occurred, please contact help desk.");
         }
 
         return returnRecipt;
@@ -465,7 +401,6 @@ public class CarDatabaseHandler {
 
         try {
             String todaysDate = getDate();
-            System.out.println(todaysDate);
             PreparedStatement createView = connection.prepareStatement(
                     "create or replace view dailyrent as select v.location, v.vtname, r.rentFromDate from vehicle v, rentals r where v.vlicense = r.vlicense");
             ResultSet dailyRentView = createView.executeQuery();
@@ -481,7 +416,8 @@ public class CarDatabaseHandler {
                 report.add(reportRow);
             }
 
-            PreparedStatement getTotal = connection.prepareStatement("select count(*) FROM dailyrent where rentFromDate = ?");
+            PreparedStatement getTotal = connection
+                    .prepareStatement("select count(*) FROM dailyrent where rentFromDate = ?");
             getTotal.setString(1, todaysDate);
             ResultSet total = getTotal.executeQuery();
 
@@ -504,8 +440,7 @@ public class CarDatabaseHandler {
     }
 
     /**
-     * Generate Daily Rental Report by Branch TODO!!!!! TODO: need to construct
-     * another class to store report info ???
+     * Generate Daily Rental Report by Branch
      */
     public ArrayList<String[]> getDailyRentalsByBranch(String location) {
         ArrayList<String[]> report = new ArrayList<>();
@@ -513,7 +448,6 @@ public class CarDatabaseHandler {
 
         try {
             String todaysDate = getDate();
-            System.out.println(todaysDate);
             PreparedStatement createView = connection.prepareStatement(
                     "create or replace view dailyrent as select v.location, v.vtname, r.rentFromDate from vehicle v, rentals r where v.vlicense = r.vlicense");
             ResultSet dailyRentView = createView.executeQuery();
@@ -530,7 +464,8 @@ public class CarDatabaseHandler {
                 report.add(reportRow);
             }
 
-            PreparedStatement getTotal = connection.prepareStatement("select count(*) FROM dailyrent where rentFromDate = ? and location = ?");
+            PreparedStatement getTotal = connection
+                    .prepareStatement("select count(*) FROM dailyrent where rentFromDate = ? and location = ?");
             getTotal.setString(1, todaysDate);
             getTotal.setString(2, location);
             ResultSet total = getTotal.executeQuery();
@@ -553,38 +488,32 @@ public class CarDatabaseHandler {
         return report;
     }
 
-    /**
-     * Generate Daily Return Report TODO!!!!! TODO: need to construct another class
-     * to store report info ???
-     */
     public ArrayList<String[]> getDailyReturns() {
         ArrayList<String[]> report = new ArrayList<>();
         ResultSet rs = null;
 
         try {
             String todaysDate = getDate();
-            System.out.println(todaysDate);
             PreparedStatement createView = connection.prepareStatement(
                     "create or replace view dailyreturn as select v.location, v.vtname, ret.dateReturned, ret.value from vehicle v, rentals r, returns ret where v.vlicense = r.vlicense and r.rid = ret.rid");
 
             ResultSet dailyReturnView = createView.executeQuery();
-
-            PreparedStatement getReport = connection.prepareStatement( "select location, vtname, count(*), sum(value) from dailyreturn where dateReturned = ? group by location, vtname");
+            PreparedStatement getReport = connection.prepareStatement(
+                    "select location, vtname, count(*), sum(value) from dailyreturn where dateReturned = ? group by location, vtname");
             getReport.setString(1, todaysDate);
             rs = getReport.executeQuery();
-
             while (rs.next()) {
                 String[] reportRow = new String[] { rs.getString("location"), rs.getString("vtname"),
                         Integer.toString(rs.getInt(3)), Integer.toString(rs.getInt(4)) };
                 report.add(reportRow);
             }
-
-            PreparedStatement getTotal = connection.prepareStatement("select count(*) FROM dailyreturn where dateReturned = ?");
+            PreparedStatement getTotal = connection
+                    .prepareStatement("select count(*), sum(value) FROM dailyreturn where dateReturned = ?");
             getTotal.setString(1, todaysDate);
             ResultSet total = getTotal.executeQuery();
-
             if (total.next()) {
-                String[] reportTotal = new String[] { "$" + Integer.toString(total.getInt(1)) };
+                String[] reportTotal = new String[] { Integer.toString(total.getInt(1)) + " and total cost is: $"
+                        + Integer.toString(total.getInt(2)) };
                 report.add(reportTotal);
             }
 
@@ -601,23 +530,19 @@ public class CarDatabaseHandler {
         return report;
     }
 
-    /**
-     * Generate Daily Return Report by Branch TODO!!!!! TODO: need to construct
-     * another class to store report info ???
-     */
     public ArrayList<String[]> getDailyReturnsByBranch(String location) {
         ArrayList<String[]> report = new ArrayList<>();
         ResultSet rs = null;
 
         try {
             String todaysDate = getDate();
-            System.out.println(todaysDate);
             PreparedStatement createView = connection.prepareStatement(
                     "create or replace view dailyreturn as select v.location, v.vtname, ret.dateReturned, ret.value from vehicle v, rentals r, returns ret where v.vlicense = r.vlicense and r.rid = ret.rid");
 
             ResultSet dailyReturnView = createView.executeQuery();
 
-            PreparedStatement getReport = connection.prepareStatement( "select location, vtname, count(*), sum(value) from dailyreturn where dateReturned = ? and location = ? group by location, vtname");
+            PreparedStatement getReport = connection.prepareStatement(
+                    "select location, vtname, count(*), sum(value) from dailyreturn where dateReturned = ? and location = ? group by location, vtname");
             getReport.setString(1, todaysDate);
             getReport.setString(2, location);
             rs = getReport.executeQuery();
@@ -628,13 +553,15 @@ public class CarDatabaseHandler {
                 report.add(reportRow);
             }
 
-            PreparedStatement getTotal = connection.prepareStatement("select count(*) FROM dailyreturn where dateReturned = ? and location = ?");
+            PreparedStatement getTotal = connection.prepareStatement(
+                    "select count(*), sum(value) FROM dailyreturn where dateReturned = ? and location = ?");
             getTotal.setString(1, todaysDate);
             getTotal.setString(2, location);
             ResultSet total = getTotal.executeQuery();
 
             if (total.next()) {
-                String[] reportTotal = new String[] { "$" + Integer.toString(total.getInt(1)) };
+                String[] reportTotal = new String[] { Integer.toString(total.getInt(1)) + " and total cost is: $"
+                        + Integer.toString(total.getInt(2)) };
                 report.add(reportTotal);
             }
 
@@ -656,25 +583,46 @@ public class CarDatabaseHandler {
      * ================================================
      */
 
-    // private String getDateTime() {
-    //
-    // DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy",
-    // Locale.getDefault());
-    //
-    // Date date = new Date();
-    //
-    // return dateFormat.format(date);
-    // }
-
     private String getDate() {
         LocalDate date = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         return formatter.format(date);
     }
 
-    /**
-     * Weird Stuff Ignore ================================================
-     */
+    private boolean nullError(SQLException e) {
+        return (e.getMessage().contains("ORA-02291"));
+    }
+
+    private boolean isDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        try {
+            LocalDate.parse(date, formatter);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isDateBeforeToday(String date) {
+        String todaysDate = getDate();
+        if (isDate(date)) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            LocalDate today = LocalDate.parse(todaysDate, formatter);
+            LocalDate input = LocalDate.parse(date, formatter);
+            return input.isBefore(today);
+        }
+        return true;
+    }
+
+    private boolean isToDateBefore(String fromDate, String toDate) {
+        if (isDate(fromDate) && isDate(toDate)) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            LocalDate from = LocalDate.parse(fromDate, formatter);
+            LocalDate to = LocalDate.parse(toDate, formatter);
+            return to.isBefore(from);
+        }
+        return true;
+    }
 
     public boolean login(String username, String password) {
         try {
@@ -693,7 +641,6 @@ public class CarDatabaseHandler {
         }
     }
 
-    // not sure what it does here just put it first
     private void rollbackConnection() {
         try {
             connection.rollback();

@@ -6,18 +6,9 @@ import ca.ubc.cs304.ui.LoginWindow;
 import ca.ubc.cs304.ui.MainDisplay;
 import java.util.ArrayList;
 
-import ca.ubc.cs304.database.CarDatabaseHandler;
-import ca.ubc.cs304.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.delegates.LoginWindowDelegate;
 import ca.ubc.cs304.delegates.TerminalTransactionsDelegate;
-import ca.ubc.cs304.model.BranchModel;
-import ca.ubc.cs304.model.RentReceipt;
-import ca.ubc.cs304.model.Vehicles;
-import ca.ubc.cs304.ui.LoginWindow;
-import ca.ubc.cs304.ui.MainDisplay;
-import ca.ubc.cs304.ui.TerminalTransactions;
-import java.sql.Date;
-import java.util.ArrayList;
+
 
 
 /**
@@ -87,13 +78,10 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
                                    String vtname, String fromDate, String toDate) {
 	    // check if customer dlicense exists by calling database handler
 		// if not, add customer
-		System.out.println("initial reservation");
         if (! carHandler.dlicenseExistInCustomer(dlicense)) {
 			carHandler.addCustomer(name, address, dlicense);
-			System.out.println("new customer");
         }
 		// make a reservation for them
-		System.out.println("final");
         String str = carHandler.makeReservation(vtname, dlicense, fromDate, toDate);
 	    return str;
     }
