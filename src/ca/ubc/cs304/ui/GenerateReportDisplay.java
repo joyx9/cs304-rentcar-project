@@ -29,7 +29,7 @@ public class GenerateReportDisplay extends JFrame implements ActionListener {
         frame.setTitle("Rent-A-Car");
         setupDisplay(frame.getContentPane());
         frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }

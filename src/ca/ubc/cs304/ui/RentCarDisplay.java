@@ -100,6 +100,16 @@ public class RentCarDisplay extends JFrame implements ActionListener {
             gbc.gridx = 0;
             gbc.gridy = RELATIVE;
             frame.getContentPane().add(lnores, gbc);
+
+            JButton back = new JButton("Back to Main");
+            back.setFont(defaultFont);
+            back.addActionListener(this);
+            back.setActionCommand("backPressed");
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.gridwidth = 2;
+            gbc.gridx = 0;
+            gbc.gridy = 3;
+            frame.add(back, gbc);
         } else {
             // remove the 'next' button
             frame.getContentPane().remove(button);
